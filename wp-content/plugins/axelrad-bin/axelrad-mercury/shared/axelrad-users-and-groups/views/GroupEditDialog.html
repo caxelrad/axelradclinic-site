@@ -1,0 +1,139 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="group_edit_modal" name="ModalDialog" title="Editing a group"
+               cancel-btn-id="group_edit_cancel_btn" ok-btn-id="group_edit_btn"
+               modal-class="modal-md-width">
+        <buttons>
+          <component ns="axelrad-common" name="Button" id="group_edit_btn" class="btn-success" caption="Save Changes">
+          </component>  
+          <component ns="axelrad-common" name="Button" id="group_edit_cancel_btn" class="btn-secondary" caption="Never mind">
+          </component>
+        </buttons>
+        <modalbody>
+          <div>
+            <div style="padding-bottom: 5px;">
+              <h4>
+                Editing a group
+              </h4>
+            </div>
+            <component ns="axelrad-common" id="edit_group_form" name="Form" form-is-wizard="false">
+              <pages>
+                <div id="edit_group_info" class="form-page" data-form-id="edit_group_form">
+                  <div class="form-group">
+                    <label class="full-width" for="group_edit_display_name">Group Display Name (up to 50 characters)</label>
+                    <input autocomplete="off" maxlength="50" prop-name="groupDisplayName" type="text" name="display_name" id="group_edit_display_name" class="form-control">  
+                  </div>
+                  <div class="form-group">
+                    <label class="full-width" for="group_edit_desc">Group Description</label>
+                    <textarea class="form-control" id="group_edit_desc" name="desc" rows="3" prop-name="groupDescription"></textarea>  
+                  </div>
+                  <div class="form-group" id="form_edit_name">
+                    <label class="full-width" for="group_edit_name">Group Name (this cannot be changed)</label>
+                    <input autocomplete="off" prop-name="groupName" disabled="disabled" type="text" name="name" id="group_edit_name" class="form-control">
+                  </div>
+                </div>
+              </pages>
+            </component>
+          </div>
+        </modalbody>
+      </component>
+  </div>
+    
+  </content>
+  <script>
+    class GroupEditDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        
+      }
+      
+      get form() { return this.group_edit_modal.edit_group_form; }
+      
+      onInit(me)
+      {
+        me.group_edit_modal.onCancelClicked(
+          function()
+          {
+            me.fire('cancel');
+          }
+        );
+        
+        //don't allow anything but numbers, letter, spaces for gorup display name
+        me.select("#group_edit_display_name").on('keypress', 
+          function (event) 
+          {
+            var regex = new RegExp("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (key != ' ')
+            {
+              if (!regex.test(key)) 
+              {
+                event.preventDefault();
+                return false;
+              }
+            }
+            me.fire('changed');
+          }
+        );
+        
+        me.select("#group_edit_desc").on('keyup', 
+          function()
+          {
+            me.fire('changed');
+          }
+        );
+        
+        me.select("#group_edit_display_name").on('keyup', 
+          function()
+          {
+            
+          }
+        );
+        
+        me.group_edit_modal.group_edit_btn.onClick(
+          function()
+          {
+            me.fire('submit');
+          }
+        );
+        
+        me.fire('changed');
+      }
+      
+      changed(handler) { this.bind('changed', handler); }
+      
+      onCancel(handler) { this.bind('cancel', handler); }
+      onSubmit(handler) { this.bind('submit', handler); }
+      
+      /*
+      these aer no longer needed - we ahve them mapped via the prop-name attribute above
+      get groupName() { return this.select("#group_form_name").val(); }
+      set groupName(val) { this.select("#group_form_name").val(val); }
+      
+      get groupDisplayName() { return this.select("#group_form_display_name").val(); }
+      set groupDisplayName(val) { this.select("#group_form_display_name").val(val); }
+      
+      get groupDescription() { return this.select("#group_form_desc").val(); }
+      set groupDescription(val) { this.select("#group_form_desc").val(val); }
+      */
+      
+      set allowSubmit(value)
+      {
+        this.group_edit_modal.group_edit_btn.enabled = value;
+      }
+      
+      showModal()
+      {
+        this.group_edit_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.group_edit_modal.hide();
+      }
+    }
+  </script>
+</view>

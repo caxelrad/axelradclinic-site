@@ -1,0 +1,26 @@
+<view>
+  <content>
+    <div>
+      <h4 id="multi_detail_title" style="text-align: left;">
+      </h4>
+      [buttons here for multiple appt]
+    </div>
+  </content>
+  <script>
+    class ApptMultiDetailView extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      set title(value) { jQuery('#multi_detail_title').html(value); }
+      get title() { this.selectId('multi_detail_title').html(); }
+      
+      onInit(me)
+      {
+        
+      }
+    }
+  </script>
+</view>

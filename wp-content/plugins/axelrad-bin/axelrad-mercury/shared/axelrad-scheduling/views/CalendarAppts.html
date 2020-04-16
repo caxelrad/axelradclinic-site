@@ -1,0 +1,89 @@
+<view>
+  <content>
+    <table id="calendar_appts" class="table list-view-table">
+      <thead>
+        <tr>
+          <th scope="col" class="list-view-header" style="width: 20px;">
+            <input type="checkbox" id="appts-check-all" style="margin-left: auto; margin-right: auto;" />
+          </th>
+          <th scope="col" class="list-view-header">Time</th>
+          <th scope="col" class="list-view-header">Patient</th>
+          <th scope="col" class="list-view-header"></th>
+        </tr>
+      </thead>
+      <component ns="axelrad-common" name="TableBody" id="calendar_appts_list" key-prop="id" 
+                 item-class="list-view-row"
+                 multiselect="true" 
+                 multi-select-input-class="appt-row-check" 
+                 select-all-input-id="appts-check-all"
+                 selected-row-class="list-view-row-selected">
+        <templates>
+          <template>
+            <tr data-key="{id}" data-status="{status}" class="list-view-row">
+              <td class="list-view-cell">
+                <div class="list-column-value">
+                  <input type="checkbox" class="appt-row-check" data-key="{id}" style="margin-left: auto; margin-right: auto;" />
+                </div>
+              </td>
+              <td class="list-view-cell">
+                <div class="list-column-value list-item-subtitle">
+                  <span style="background-color:{type_color};">&nbsp;&nbsp;</span> {time}
+                </div>
+              </td>
+              <td>
+                <div class="list-column-value list-item-title">{name}</div>
+              </td>
+              <td>
+                <div class="list-column-value">
+                  <span class="badge badge-light badge-size-med" 
+                        style="font-weight: 400; opacity: 0.75; background-color: {status_color}; color: {status_text_color};">{status_display_name}</span>  
+                </div>
+                
+              </td>
+            </tr>
+          </template>
+        </templates>
+      </component>
+      <component ns="axelrad-common" id="status_opts" name="DropDownMenu">
+        <items>
+          <item>
+            <a class="dropdown-item" data-id="{id}" href="#">{name}</a>
+          </item>
+        </items>
+      </component>
+    </table>
+  </content>
+  <script>
+    class CalendarAppts extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      get selectedKeys() { return this.calendar_appts_list.selectedKeys; }
+      
+      set selectRow(value)
+      {
+        this.calendar_appts_list.selectRow(value);
+      }
+      
+      onSelectionChanged(handler) { this.bind('selection-changed', handler); }
+      
+      onInit(me)
+      {
+        me.calendar_appts_list.onSelectionChanged(
+           function()
+           {
+             me.fire('selection-changed');
+           }
+        );
+      }
+      
+      setAppts(items)
+      {
+        this.calendar_appts_list.setItems(items);
+      }
+    }
+  </script>
+</view>

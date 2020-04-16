@@ -1,0 +1,80 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="user_delete_modal" name="ModalDialog" title="Deleting a user..."
+               ok-btn-id="user_del_ok_btn" cancel-btn-id="user_del_cancel_btn" 
+               modal-class="modal-md-width"
+               footer-class="ax-modal-block-footer">
+        <buttons>
+          <div>
+            <button id="user_del_ok_btn" class="btn btn-success btn-block">
+              Yes, delete the user now
+            </button>  
+          </div>
+          <div>
+            <button id="user_del_cancel_btn" class="btn btn-secondary btn-block">
+              Never mind
+            </button>
+          </div>
+        </buttons>
+        <modalbody>
+          <div style="text-align:center;">
+            <div style="padding-bottom: 5px;">
+              <h4>
+                Are you sure you want to delete <span class="bold" id="delete_user_name" prop-name="userName"></span>?
+              </h4>
+              This is NOT reversible and can lead to bad consequences, so... do not do it unless you are 100% sure, ok?
+            </div>
+          </div>
+
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class UserDeleteDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this.origCaption = '';
+      }
+      
+      onInit(me)
+      {
+        this.origCaption = jQuery("#user_del_ok_btn").html();
+        
+        this.user_delete_modal.onOKClicked(
+          function() { me.fire('ok'); }
+        );
+        
+        this.user_delete_modal.onCancelClicked(
+          function() { me.fire('cancel'); }
+        );
+      }
+      
+      resetConfirm()
+      {
+        jQuery("#user_del_ok_btn").addClass('btn-success').removeClass('btn-danger').html(this.origCaption);
+      }
+      
+      confirmAgain()
+      {
+        jQuery("#user_del_ok_btn").addClass('btn-danger').removeClass('btn-success').html('Are you SURE?');
+      }
+      
+      onOK(handler) { this.bind('ok', handler); }
+      onCancel(handler) { this.bind('cancel', handler); }
+      
+      showModal()
+      {
+        this.user_delete_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.user_delete_modal.hide();
+      }
+    }
+  </script>
+</view>

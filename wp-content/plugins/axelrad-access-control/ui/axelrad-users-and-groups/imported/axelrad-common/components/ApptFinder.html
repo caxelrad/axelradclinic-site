@@ -1,0 +1,266 @@
+<component>
+  <attrs>
+    <attr name="item-class" value="btn-light"></attr>
+    <attr name="selected-item-class" value="btn-info"></attr>
+  </attrs>
+  <content>
+    <div class="row">
+      <div class="col padding-relaxed margin-tight" id="{id}_col_0">
+        <div class="weekday">
+          Sun<br/><span id="{id}_date_0"></span>
+        </div>
+        <div class="times" id="{id}_times_0">
+          <component id="{id}_times_0_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_0_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+      <div class="col padding-relaxed margin-tight" id="{id}_col_1">
+        <div class="weekday">
+          Mon<br/><span id="{id}_date_1"></span>
+        </div>
+        <div class="times" id="{id}_times_1">
+          <component id="{id}_times_1_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_1_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+      <div class="col padding-relaxed margin-tight"  id="{id}_col_2">
+        <div class="weekday">
+          Tue<br/><span id="{id}_date_2"></span> 
+        </div>
+        <div class="times" id="{id}_times_2">
+          <component id="{id}_times_2_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_2_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+      <div class="col padding-relaxed margin-tight" id="{id}_col_3">
+        <div class="weekday">
+          Wed<br/><span id="{id}_date_3"></span>
+        </div>
+        <div class="times" id="{id}_times_3">
+          <component id="{id}_times_3_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_3_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+      <div class="col padding-relaxed margin-tight" id="{id}_col_4">
+        <div class="weekday">
+          Thu<br/><span id="{id}_date_4"></span>
+        </div>
+        <div class="times" id="{id}_times_4">
+          <component id="{id}_times_4_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_4_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+      <div class="col padding-relaxed margin-tight" id="{id}_col_5">
+        <div class="weekday">
+          Fri<br/><span id="{id}_date_5"></span>
+        </div>
+        <div class="times" id="{id}_times_5">
+          <component id="{id}_times_5_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_5_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+      <div class="col padding-relaxed margin-tight" id="{id}_col_6">
+        <div class="weekday">
+          Sat<br/><span id="{id}_date_6"></span>
+        </div>
+        <div class="times" id="{id}_times_6">
+          <component id="{id}_times_6_btns" name="ButtonList" key-prop="time" 
+                     multiselect="false" item-class="{item-class}"
+                     selected-item-class="{selected-item-class}">
+            <templates>
+              <template>
+                <button id="button_6_{rowIndex}" class="btn {itemClass} btn-sml time-select-btn" style="width: 100%;" data-key="{time}">
+                  {friendly_time}
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+    </div>
+  </content>
+  <script>
+    class ApptFinder extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+        var today = new Date().midnight();
+        this._startDate = today.isSunday() ? today : today.sundayBefore();
+      }
+      
+      clear()
+      {
+        this.setTimes([]);
+      }
+      
+      get selectedTimes() 
+      {
+        var items = [];
+        for (var i = 0; i < 7; i++)
+        {
+          var sel = this.getWkDayBtnList(i).selectedRows;
+          for (var x = 0; x < sel.length; x++)
+            items.push(sel[x]);
+        }
+        return items; 
+      }
+      
+      onInit(me)
+      {
+        for (var i = 0; i < 7; i++)
+        {
+          var list = this.getWkDayBtnList(i);
+          list.itemClass = this.itemClass;
+          list.selectedItemClass = this.selectedItemClass;
+          list.onSelectionChanged(
+            function()
+            {
+              me.fire('selection-changed', list.selectedItemKey);
+            }
+          );
+        }
+      }
+      
+      onSelectionChanged(handler)
+      {
+        this.bind('selection-changed', handler);
+      }
+      
+      isTimeSelected(time)
+      {
+        for (var i = 0; i < 7; i++)
+        {          
+          if (this.getWkDayBtnList(i).isSelected(time))
+            return true;
+        }
+        return false;
+      }
+      
+      selectTime(time)
+      {
+        for (var i = 0; i < 7; i++)
+        {     
+          var list = this.getWkDayBtnList(i);
+          if (list.keyExists(time))
+          {
+            list.selectRow(time);
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      unSelectTime(time)
+      {
+        for (var i = 0; i < 7; i++)
+        {     
+          var list = this.getWkDayBtnList(i);
+          if (list.keyExists(time))
+          {
+            list.unSelectRow(time);
+            return true;
+          }
+        }
+        
+        return false;
+      }
+      
+      get startDate() { return this._startDate; }
+      set startDate(value) { this._startDate = value; }
+      
+      setTimes(times)
+      {
+        var alltimes = [];
+        for (var i = 0; i < times.length; i++)
+        {
+          var time = times[i];
+          var day = time.getDay();
+          this.log('day = '+day);
+          if (alltimes[day] == null)
+          {
+            alltimes[day] = [];
+          }
+          alltimes[day].push(this.getTimeObj(time));
+        }
+        
+        for (var d in alltimes)
+        {
+          //this.log('adding day '+d+' values');
+          this.getWkDayBtnList(d).setItems(alltimes[d]);   
+        }
+        
+        for (var x = 0; x < 7; x++)
+        {
+          var date = this.startDate.addDays(x);
+          this.select("#"+this.id+"_date_"+x).html((date.getMonth()+1)+"/"+date.getDate());
+        }
+      }
+      
+      getTimeObj(time)
+      {
+        return {'time' : time.toString(), 'friendly_time' : time.toFriendlyTime() };
+      }
+      
+      getWkDayBtnList(day)
+      {
+        var t = this;
+        return eval('window.'+this.id+'_times_'+day+'_btns');
+      }
+    }
+  </script>
+</component>

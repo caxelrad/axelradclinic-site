@@ -1,0 +1,76 @@
+<view>
+  <content>
+    <div style="padding: 10px;">
+      <h5 style="display: inline-block;">
+        The user is in <span class="bold" id="membership_count"></span> groups:
+      </h5>
+      <button id="add_group_btn" class="btn btn-success btn-sml">Add To Group</button>
+      <component ns="axelrad-common" id="user_groups_list" name="List" item-class="in-group" key-prop="name" style="padding-left: 0px; width: 100%;">
+        <templates>
+          <template name="default">
+            <li class="in-group" style="border-top: solid 1px #cccccc; padding: 5px;">%display_name% <button class="btn btn-link btn-xs rmv-group-btn" 
+              data-key="%id%">[remove]</button></li>
+          </template>
+          <template name="no-remove">
+            <li class="in-group" style="border-top: solid 1px #cccccc; padding: 5px;">%display_name%</li>
+          </template>
+        </templates>
+      </component>  
+    </div>
+  </content>
+  <script>
+    class UserGroups extends MercuryView
+    {
+      constructor(id) 
+      { 
+        super(id); 
+        this.selectedGroupId = '';
+      }
+      
+      onInit(me)
+      {
+        this.select("#add_group_btn").click(
+          function()
+          {
+            me.fire('add-group');
+          }
+        );
+        
+        this.element().on('click', '.rmv-group-btn',
+          function()
+          {
+            me.selectedGroupId = jQuery(this).attr('data-key');
+            me.fire('rmv-group');
+          }
+        );
+      }
+      
+      
+      set membershipCount(count)
+      {
+        this.select("#membership_count").html(count);
+      }
+      
+      setMemberships(memberships)
+      {
+        for (var i = 0; i < memberships.length; i++)
+        {
+          if (memberships[i].group_name == 'all-users')
+            memberships[i].uses_template = 'no-remove';
+          else
+            memberships[i].uses_template = 'default';
+        }
+        this.user_groups_list.setItems(memberships);
+      }
+      
+      addGroupClicked(handler) { this.bind('add-group', handler); }
+      rmvGroupClicked(handler) { this.bind('rmv-group', handler); }
+    }
+    
+//     var hackUserGroupView = null;
+//     function rmvGroupClick(element)
+//     {
+//       window.hackUserGroupView.rmvGroupClick(element);
+//     }
+  </script>
+</view>

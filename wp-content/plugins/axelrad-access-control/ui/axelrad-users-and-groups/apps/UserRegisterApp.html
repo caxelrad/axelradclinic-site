@@ -1,0 +1,33 @@
+<app model="UserRegisterAppModel">
+  <content>
+    <div>
+      <component id="reg_form" name="SimpleRegForm" add-to-group-name="core-confidence-code-access"
+         first-name-placeholder="Your first name..." last-name-placeholder="Your last name..."
+         email-placeholder="Your email address..." phone-placeholder="Your phone number..."
+         show-first-name="true" require-first-name="true"
+         show-last-name="false" show-phone="false"
+         success-url="/l/test-thank-you" disclaimer-text="We will NEVER share your information. EVER."
+         btn-caption="Register Now" btn-class="btn-primary"
+         cancel-caption="" cancel-url=""></component>
+      <component name="TestModeOutput" id="tm_output"></component>
+    </div>
+  </content>
+  <script type="text/javascript">
+  class UserRegisterApp extends MercuryApp
+  {
+    constructor(id)
+    {
+      super(id);
+    }
+    
+    
+    onInit(me)
+    {
+      
+    }
+    
+    get form() { return this.reg_form.form; }
+    
+  }
+  </script>
+</app>

@@ -1,0 +1,149 @@
+<view>
+  <content>
+    <h4 class="form-page-title" id="pt_info_form_title">
+    </h4>
+    <p id="pt_info_form_desc"></p>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_form_first">First Name</label>
+        <input autocomplete="off" prop-name="firstName" type="text" name="first" id="pt_form_first" class="form-control">
+      </div>
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_form_last">Last Name</label>
+        <input autocomplete="off" prop-name="lastName" type="text" name="last" id="pt_form_last" class="form-control">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_form_email">Email</label>
+        <input autocomplete="off" prop-name="email" type="text" name="email" id="pt_form_email" class="form-control">
+      </div>
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_form_phone">Phone</label>
+        <input autocomplete="off" prop-name="phone" type="text" name="phone" id="pt_form_phone" class="form-control">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_form_dob">Date of Birth</label>
+        <component ns="axelrad-common" name="DateInput" id="pt_dob" name="dob" class="date-selector" placeholder="mm-dd-yyyy" mask="00-00-0000" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_form_source">Source</label>
+        <select id="pt_form_source" prop-name="source" name="source" class="form-control">
+          <option value="source1">Source 1</option>
+          <option value="source2">Source 2</option>
+          <option value="source3">Source 3</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-page-footer">
+      <button class="btn btn-secondary pull-left form-cancel-btn">
+        Never Mind
+      </button>
+      <button class="btn btn-info" id="pt_info_go_back">Go Back</button>
+      <button class="btn btn-success" id="pt_info_btn">
+        Save and Continue
+      </button>
+    </div>
+  </content>
+  <script>
+    class PatientInfoForm extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      get title() { return this.select("#pt_info_form_title").html(); }
+      set title(value) { this.select("#pt_info_form_title").html(value); }
+      
+      
+      get description() { return this.select("#pt_info_form_desc").html(); }
+      set description(value) { this.select("#pt_info_form_desc").html(value); }
+      
+      onInit(me)
+      {
+        this.select('#pt_form_phone').mask('(000) 000-0000');
+        this.select('#pt_form_phone').attr('placeholder', 'eg. (123) 456-7890');
+        
+        this.select("#pt_info_btn").click(
+          function(event)
+          {
+            me.fire('on-submit');
+            event.stopPropagation();
+          }
+        );
+        
+        this.select("#pt_info_go_back").click(
+          function(event)
+          {
+            me.fire('on-back');
+            event.stopPropagation();
+          }
+        );
+      }
+      
+      onBack(handler) { this.bind('on-back', handler); }
+      
+      onSubmit(handler) { this.bind('on-submit', handler); }
+      
+      
+      markValidState(prop_name, valid)
+      {
+        var input = jQuery('[prop-name="'+prop_name+'"]');
+        var inputId = jQuery(input).attr('id');
+        if (input.length == 0)
+        {
+          if (prop_name == 'dob')
+          {
+            inputId = 'pt_dob';
+          }
+        }
+        if (inputId)
+          u.setInputValid(inputId, valid);
+        
+        return valid;
+      }
+    
+      
+      get dob() { return this.pt_dob.date; }
+      set dob(val) { this.pt_dob.date = val; }
+      
+      get phone() { return this.select("#pt_form_phone").cleanVal(); }
+      
+      set phone(val) 
+      { 
+        var masked = this.select("#pt_form_phone").masked(val);
+        this.select("#pt_form_phone").val(masked); 
+      }
+      
+      
+      get phoneValid() { return u.getInputValid("pt_form_phone"); }
+      set phoneValid(valid) 
+      {
+        u.setInputValid("pt_form_phone", valid);
+      }
+      
+      
+      get email() { return this.select("#pt_form_email").val(); }
+      set email(val) { this.select("#pt_form_email").val(val); }
+      
+      get emailValid() { return u.getInputValid("pt_form_email"); }
+      set emailValid(valid) 
+      {
+        u.setInputValid("pt_form_email", valid);
+      }
+      
+      get firstName() { return this.select("#pt_form_first").val(); }
+      set firstName(val) { this.select("#pt_form_first").val(val); }
+      
+      get lastName() { return this.select("#pt_form_last").val(); }
+      set lastName(val) { this.select("#pt_form_last").val(val); }
+
+      get source() { return this.select("#pt_form_source").val(); }
+      set source(val) { this.select("#pt_form_source").val(val); }
+
+    }
+  </script>
+</view>

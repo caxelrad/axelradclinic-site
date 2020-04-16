@@ -1,0 +1,107 @@
+<view>
+  <content>
+    <div>  
+      <component ns="axelrad-common" id="user_group_add_modal" name="ModalDialog" title="Adding a user to a group..."
+                 modal-class="modal-md-width" cancel-btn-id="user_add_cancel_btn" 
+                 footer-class="ax-modal-block-footer">
+        <buttons>
+          <div>
+            <button id="user_add_cancel_btn" class="btn btn-secondary btn-block">
+              I'm Done
+            </button>
+          </div>
+        </buttons>
+        <modalbody>
+          <div style="text-align:center;">
+            Select the group you want to add <span id="add_user_name" prop-name="userName" class="bold"></span> to:
+            <component ns="axelrad-common" id="add_to_groups_list" name="List" 
+              item-class="add-to-group" key-prop="name" style="padding-left: 0px; width: 100%;">
+              <templates>
+                <template name="default">
+                  <li class="add-to-group link bold" data-key="%id%" data-caption="%display_name%" style="border-top: solid 1px #cccccc; padding: 5px;">%display_name%</li>
+                </template>
+              </templates>
+            </component>  
+          </div>
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class UserAddGroupDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this.selectedGroupId = '';
+        this.selectedGroupName = '';
+      }
+      
+      onInit(me)
+      {
+        this.groups_list.onItemClicked(
+          function()
+          {
+            if (me.groups_list.selectedKey)
+            {
+              me.selectedGroupId = me.groups_list.selectedKey;
+              if (me.selectedGroupName == '')
+                me.selectedGroupName = me.groups_list.selectItem(me.selectedGroupId).html();
+
+              me.fire('item-clicked');
+            }
+          }
+        );
+
+        
+        this.user_group_add_modal.onCancelClicked(
+          function() { me.fire('cancel'); }
+        );
+      }
+      
+      get userName() { return this.select("#add_user_name").html(); }
+      set userName(val) { this.select("#add_user_name").html(val); }
+      
+      get groups_list() { return this.user_group_add_modal.add_to_groups_list; }
+      
+      resetConfirm()
+      {
+        var me = this;
+        this.groups_list.selectItem(this.selectedGroupId)
+          .css('background-color', 'transparent').css('color', '')
+          .addClass('bold')
+          .html(this.selectedGroupName);
+        
+        this.selectedGroupName = '';
+      }
+      
+      confirm(msg)
+      {
+        var me = this;
+        this.groups_list.selectItem(this.selectedGroupId)
+          .css('background-color', '#28a745').css('color', '#ffffff')
+          .removeClass('bold')
+          .html(msg);
+      }
+      
+      setGroups(list)
+      {
+        this.groups_list.setItems(list);
+      }
+      
+      onItemClicked(handler) { this.bind('item-clicked', handler); }
+      
+      onCancel(handler) { this.bind('cancel', handler); }
+      
+      showModal()
+      {
+        this.user_group_add_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.user_group_add_modal.hide();
+      }
+    }
+  </script>
+</view>

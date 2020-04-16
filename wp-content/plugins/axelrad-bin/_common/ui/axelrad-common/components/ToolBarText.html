@@ -1,0 +1,26 @@
+<component>
+  <attrs>
+    <attr name="text" value="" />
+  </attrs>
+  <content>
+    <span class="navbar-text">{text}</span>
+  </content>
+  <script>
+    class ToolBarText extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        
+      }
+      
+      get text() { return this.element().html(); }
+      
+      set text(value) { this.element().html(value); }
+    }
+  </script>
+</component>

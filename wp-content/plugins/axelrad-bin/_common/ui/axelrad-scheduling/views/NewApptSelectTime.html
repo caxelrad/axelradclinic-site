@@ -1,0 +1,195 @@
+<view>
+  <content>
+      <div class="form-row">
+        <div class="container">
+          <div class="row">
+            <div class="col-4">
+              <component ns="axelrad-common" name="DateSelector" id="new_appt_date" class="date-selector-inline left" inline="true"></component>          
+            </div>
+            <div class="col-8">
+              <h4>
+                Showing <span id="appt_date_val"></span> in 
+                <component ns="axelrad-common" id="new_appt_location_btn" name="DropDownButton" caption="" style="display: inline-block;" btn-style="font-size: 1.25rem;" key-prop="id" 
+                         auto-refresh-caption="true" caption-prop="name" item-class="dropdown-item" btn-class="btn-light btn-inline">
+                  <templates>
+                    <template>
+                      <button class="dropdown-item" data-key="{id}">{name}</button>
+                    </template>
+                  </templates>
+                </component>
+              </h4>
+              <div id="time_finder_box">
+                <component ns="axelrad-common" id="new_appt_time_finder" 
+                         item-class="btn-success" blocked-item-class="btn-secondary"
+                         selected-item-class="btn-success" name="SimpleApptFinder"></component>    
+              </div>
+
+              <div style="display: none; margin-top: 25px; text-align: center;" class="centered" id="no_times_msg">
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <component ns="axelrad-common" id="new_appt_time_confirm" name="Confirm" title="Confirm the selected time..."
+                 yes-caption="Yep. That's it." no-caption="No. Go back." has-cancel="false">
+          <modalbody>
+            <div class="inline centered">
+              <div class="content-left">
+                <h4>Is this correct?</h4>
+                <div>A <span id="type_color_confirm">&nbsp;&nbsp;</span> <strong><span id="type_name_confirm"></span></strong></div>
+                <div>on <strong><span id="appt_date_confirm"></span></strong></div>
+                <div>in <strong><span id="location_name_confirm"></span></strong>.</div>    
+              </div>
+            </div>
+          </modalbody>
+        </component>
+      </div>
+  </content>
+  <script>
+    class NewApptSelectTime extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._date = new Date();
+        this.noTimeMsgTemplate = '';
+        this._locationName = '';
+      }
+      
+      get noTimesMsg() { return this.noTimeMsgTemplate; }
+      set noTimesMsg(v) 
+      { 
+        this.noTimeMsgTemplate = v; 
+      }
+      
+      get date() { return this.new_appt_date.date; }
+      
+      set date(val) 
+      { 
+        this.new_appt_date.date = val;
+      }
+      
+      get displayDate() { return this.select("#appt_date_val").html(); }
+      set displayDate(val) { this.select("#appt_date_val").html(val); }
+      
+      set apptTypeName(val) { this.select("#type_name_confirm").html(val); }
+      set apptTypeColor(val) { this.select("#type_color_confirm").css('background-color', val); }
+      
+      set confirmTimeDisplay(v)
+      {
+        this.select("#appt_date_confirm").html(v);
+      }
+      
+      get locationName() { return this._locationName; }
+      set locationName(v) { this._locationName = v; this.select("#location_name_confirm").html(v); }
+      
+      get locationId()
+      {
+        return this.new_appt_location_btn.selectedKey;
+      }
+      
+      set locationId(value)
+      {
+        this.new_appt_location_btn.selectRow(value);
+      }
+      
+      
+      get selectedTime()
+      {
+        return this.new_appt_time_finder.selectedTime;
+      }
+      
+      setLocations(locations)
+      {
+        this.new_appt_location_btn.setItems(locations);
+      }
+      
+      setTimes(times)
+      {
+        this.new_appt_time_finder.setTimes(times);
+        if (times.length > 0)
+        {
+          this.select("#time_finder_box").show();
+          this.select("#no_times_msg").hide();
+        }
+        else 
+        {
+          var noTimesMsg = this.noTimeMsgTemplate.replace('{date}', this.displayDate).replace('{location}', this._locationName);
+          this.select("#time_finder_box").hide();
+          this.select("#no_times_msg").html(noTimesMsg);
+          this.select("#no_times_msg").show();
+          this.select("#no_times_msg").css('display', 'inline-block');
+        }
+      }
+      
+      onInit(me)
+      {
+        me.new_appt_time_finder.onTimeSelected(
+           function()
+           {
+             me.fire('time-selected');
+           }
+        );
+        
+        me.select("#appt_time_go_back").click(
+          function(event)
+          {
+            me.fire('go-back');
+            event.stopPropagation();
+          }
+        );
+        
+        this.new_appt_date.onDateChanged(
+          function(obj, event)
+          {
+            me.fire('date-changed');
+          }
+        );
+        
+        this.new_appt_location_btn.onSelectionChanged(
+          function()
+          {
+            me.fire('location-changed');
+          }
+        );
+        
+        this.new_appt_time_confirm.onYes(
+          function()
+          {
+            me.new_appt_time_confirm.hide();
+            me.fire('time-confirmed');
+          }
+        );
+      }
+      
+      onLocationChanged(handler)
+      {
+        this.bind('location-changed', handler);
+      }
+      onDateChanged(handler)
+      {
+        this.bind('date-changed', handler);
+      }
+      
+      onTimeSelected(handler)
+      {
+        this.bind('time-selected', handler);
+      }
+      
+      onBack(handler)
+      {
+        this.bind('go-back', handler);
+      }
+      
+      onTimeConfirmed(handler)
+      {
+        this.bind('time-confirmed', handler);
+      }
+      
+      confirmTime()
+      {
+        this.new_appt_time_confirm.show();
+      }
+    }
+  </script>
+</view>

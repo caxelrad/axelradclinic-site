@@ -1,0 +1,9 @@
+[23-Jan-2020 22:04:39 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000] [1045] Access denied for user ''@'localhost' (using password: NO) in /home/chris358/_dev/_axelrad-os/axelrad-data-service/axelrad-data-service.php:61
+Stack trace:
+#0 /home/chris358/_dev/_axelrad-os/axelrad-data-service/axelrad-data-service.php(106): AxDatabase->db()
+#1 /home/chris358/_dev/_axelrad-os/axelrad-data-service/axelrad-data-service.php(162): AxDatabase->get_count('information_sch...', 'table_schema = ...')
+#2 /home/chris358/_dev/_axelrad-os/axelrad-data-service/axelrad-data-service.php(175): AxDatabase->table_exists_in_database('ax_group_rights')
+#3 /home/chris358/_dev/_axelrad-os/axelrad-user-mgmt/axelrad-user-mgmt.php(414): AxDatabase->sync_table_to_database(Object(AxGroupRightsTable))
+#4 /home/chris358/_dev/_axelrad-os/axelrad-user-mgmt/axelrad-user-mgmt.php(634): AxelradUserMgmt::sync('AxGroupRightsTa...')
+#5 /home/chris358/_dev/_axelrad-os/axelrad-user-mgmt/axelrad-user-mgmt-access-control.php(151): AxelradUserMgmt::replace_access('10-revision-v1', Array)
+ in /home/chris358/_dev/_axelrad-os/axelrad-data-service/axelrad-data-service.php on line 61

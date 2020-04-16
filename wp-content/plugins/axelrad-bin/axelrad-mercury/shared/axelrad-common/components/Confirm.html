@@ -1,0 +1,114 @@
+<component>
+  <attrs>
+    <attr name="title" value="Confirm"></attr>
+    <attr name="yes-caption" value="Yes"></attr>
+    <attr name="no-caption" value="No"></attr>
+    <attr name="cancel-caption" value="Cancel"></attr>
+    <attr name="has-cancel" value="false"></attr>
+  </attrs>
+  <content>
+    <div class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="{id}_title">{title}</h5>
+            <button type="button" class="close" id="{id}_close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div id="{id}_body" class="modal-body">
+            {modalbody}
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="{id}_cancel" class="btn btn-secondary pull-left">{cancel-caption}</button>
+            <button type="button" id="{id}_yes" class="btn btn-success">{yes-caption}</button>
+            <button type="button" id="{id}_no" class="btn btn-danger">{no-caption}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </content>
+  <script>
+    class Confirm extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      get body() { return this.element("body").html(); }
+      set body(val) { this.element("body").html(val); }
+      
+      get title() { return this.element("title").html(); }
+      set title(val) { this.element("title").html(val); }
+      
+      get yesCaption() { return this.element("yes").html(); }
+      set yesCaption(val) { this.element("yes").html(val); }
+      
+      get noCaption() { return this.element("no").html(); }
+      set noCaption(val) { this.element("no").html(val); }
+      
+      get cancelCaption() { return this.element("cancel").html(); }
+      set cancelCaption(val) { this.element("cancel").html(val); }
+      
+      onInit(me)
+      {
+        this.element("yes").click(
+          function(event)
+          {
+            me.fire('yes-click');
+          }
+        );
+        
+        this.element("no").click(
+          function(event)
+          {
+            if (!me.isBound('no-click'))
+              me.hide();
+            else
+              me.fire('no-click');
+          }
+        );
+        
+        this.element("cancel").click(
+          function(event)
+          {
+            if (!me.isBound('cancel-click'))
+              me.hide();
+            else
+              me.fire('cancel-click');
+          }
+        );
+        
+        this.element("close").click(
+          function(event)
+          {
+            if (!me.isBound('cancel-click'))
+              me.hide();
+            else
+              me.fire('cancel-click');
+          }
+        );
+      }
+      
+      onYes(handler) { this.bind('yes-click', handler); }
+      onNo(handler) { this.bind('no-click', handler); }
+      onCancel(handler) { this.bind('cancel-click', handler); }
+      
+      onShow(handler) { this.bind('on-show', handler); }
+      onHide(handler) { this.bind('on-hide', handler); }
+  
+      show()
+      {
+        this.element().modal('show');
+        this.fire('on-show');
+      }
+      
+      hide()
+      {
+        this.element().modal('hide');
+        this.fire('on-hide');
+      }
+    }
+  </script>
+</component>

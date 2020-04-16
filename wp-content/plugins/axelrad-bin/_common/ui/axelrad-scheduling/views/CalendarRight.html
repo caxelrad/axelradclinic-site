@@ -1,0 +1,47 @@
+<view>
+  <content>
+    <div>
+      <div id="default_detail" style="padding-top: 75px;">
+        Select an appointment to show details here.
+      </div>
+      <div id="single_detail" style="display: none;">
+        <view id="single_detail_view" name="ApptDetailView"></view>  
+      </div>
+      <div id="multi_detail" style="display: none;">
+        <view id="multi_detail_view" name="ApptMultiDetailView"></view>
+      </div>
+    </div>
+  </content>
+  <script type="text/javascript">
+    class CalendarRight extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+      }
+      
+      set selectedCount(count)
+      {
+        jQuery("#multi_detail").hide();
+        jQuery("#single_detail").hide();
+        jQuery("#default_detail").hide();
+        if (count == 0)
+        {
+          jQuery("#default_detail").show();
+        }
+        else if (count == 1)
+        {
+          jQuery("#single_detail").show();
+        }
+        else
+        {
+          jQuery("#multi_detail").show();
+        }
+      }
+    }
+  </script>
+</view>

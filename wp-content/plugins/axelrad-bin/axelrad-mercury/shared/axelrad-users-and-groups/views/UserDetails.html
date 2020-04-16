@@ -1,0 +1,67 @@
+<view>
+  <attrs>
+    <attr name="position" default="fixed" />
+  </attrs>
+  <content>
+    <div style=" position: fixed;">
+      <h3 class="content-left" id="user_detail_title" prop-name="user_name"></h3>
+      <div id="no_user" class="detail-view" style="display:none;">
+        Select a user to see stuff about that user.
+      </div>
+      <div id="one_user" class="detail-view" style="display:none;">
+        <view id="user_details_tasks" name="UserDetailsTasks"></view>
+        <p>
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-groups-tab" data-toggle="tab" href="#nav-groups" role="tab" aria-controls="nav-groups" aria-selected="true">Groups</a>
+              <a class="nav-item nav-link" id="nav-assets-tab" data-toggle="tab" href="#nav-assets" role="tab" aria-controls="nav-assets" aria-selected="false">Assets</a>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-groups" role="tabpanel" aria-labelledby="nav-groups-tab">
+              <view name="UserGroups" id="user_groups"></view>
+            </div>
+            <div class="tab-pane fade" id="nav-assets" role="tabpanel" aria-labelledby="nav-assets-tab">
+            </div>
+          </div>
+        </p>
+      </div>
+      <div id="multi_user" class="detail-view" style="display:none;">
+        You've got <span class="bold" id="user_count"></span> users selected.
+      </div>
+    </div>
+  </content>
+  <script>
+    class UserDetails extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._userCount = 0;
+      }
+      
+      onInit(me)
+      {
+      }
+      
+      get userCount() { return this._userCount; }
+      
+      set userCount(count)
+      {
+        this._userCount = count;
+        
+        this.select('.detail-view').hide();
+        if (count == 0)
+          this.select("#no_user").show();
+        else if (count == 1)
+          this.select("#one_user").show();
+        else
+          this.select("#multi_user").show();
+        
+        if (count > 0) this.select("#no_user").html('');
+        
+        this.select("#user_count").html(count);
+      }
+    }
+  </script>
+</view>

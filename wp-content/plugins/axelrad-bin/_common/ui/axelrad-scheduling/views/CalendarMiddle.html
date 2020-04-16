@@ -1,0 +1,74 @@
+<view>
+  <content>
+    <div>
+      <div style="border-bottom: solid 1px #cccccc; padding: 5px;">
+        <div style="display: inline; margin-top: 15px; margin-right: 0px;">
+          <span style="font-size: 1.25rem; text-align: left;" id="selected_date"></span>
+          in   
+        </div>
+        <component ns="axelrad-common" id="location_btn" name="DropDownButton" caption="" style="display: inline-block;" key-prop="id" 
+                   auto-refresh-caption="true" caption-prop="name" item-class="dropdown-item" btn-class="btn-inline">
+          <templates>
+            <template>
+              <button class="dropdown-item" id="location-btn-{id}" data-key="{id}">{name}</button>
+            </template>
+          </templates>
+        </component>
+      </div>  
+      <div>
+        Need a tab here to see standby as well for the selected day / location AND STUFF
+      </div>
+      <view name="CalendarAppts" id="calendar_appts"></view>
+    </div>
+  </content>
+  <script type="text/javascript">
+    class CalendarMiddle extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._date = new Date();
+      }
+      
+      get locationId() { return this.location_btn.selectedKey; }
+      set locationId(value) { this.location_btn.selectRow(value); }
+      
+      setLocationOptions(items)
+      {
+        window.logger.log('setLocationOptions('+items+');');
+        this.location_btn.setItems(items);
+      }
+      
+      locationChanged(handler)
+      {
+        this.bind('location-changed', handler);
+      }
+      
+      onInit(me)
+      {
+        this.location_btn.onSelectionChanged(
+          function()
+          {
+            me.fire('location-changed');
+          }
+        );
+        
+        this._refreshDate();
+      }
+      
+      _refreshDate()
+      {
+        this.select('#selected_date').html(this.date.toDateString());
+      }
+      
+      set date(date)
+      {
+        if (date == this._date) return;
+        this._date = date;
+        this._refreshDate();
+      }
+      
+      get date() { return this._date; }
+    }
+  </script>
+</view>

@@ -1,0 +1,51 @@
+<view>
+  <content>
+    <div>
+      <h3 id="contact_header_name" style="text-align: left; margin-bottom: 5px;">
+      </h3>
+      <component ns="axelrad-common" id="contact_email_btn" name="DropDownButton" caption="" style="display: inline-block;"   
+        key-prop="id" caption-prop="name" icon="fas fa-envelope"
+        item-class="use-template-btn" btn-class="btn-link btn-sml">
+        <templates>
+          <template>
+            <button class="dropdown-item use-template-btn" id="email-template-btn-{id}" data-key="{id}">{name}</button>
+          </template>
+        </templates>
+      </component>
+      <component ns="axelrad-common" id="contact_phone_btn" name="DropDownButton" caption="" 
+        style="display: inline-block;"   
+        key-prop="id" caption-prop="name" icon="fas fa-mobile-alt"
+        item-class="use-ph-template-btn" btn-class="btn-link btn-sml">
+        <templates>
+          <template>
+            <div class="dropdown-item use-ph-template-btn" id="ph-template-btn-{id}" data-key="{id}">{name}</div>
+          </template>
+        </templates>
+      </component>
+    </div>
+  </content>
+  <script>
+    class ContactHeader extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      get contactName() { return this.select("#contact_header_name").html(); }
+      set contactName(value) { return this.select("#contact_header_name").html(value); }
+      
+      get contactEmail() { return this.contact_email_btn.caption; }
+      set contactEmail(value) { return this.contact_email_btn.caption = value; }
+      
+      get contactPhone() { return this.contact_phone_btn.caption; }
+      set contactPhone(value) { return this.contact_phone_btn.caption = value; }
+      
+      
+      setEmailTemplateValues(items)
+      {
+        this.contact_email_btn.setItems(items);
+      }
+    }
+  </script>
+</view>

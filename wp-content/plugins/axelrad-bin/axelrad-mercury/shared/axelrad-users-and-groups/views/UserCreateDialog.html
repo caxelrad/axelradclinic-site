@@ -1,0 +1,129 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="user_create_modal" name="ModalDialog" title="Creating a user"
+             cancel-btn-id="user_create_cancel_btn" ok-btn-id="user_create_btn"
+             modal-class="modal-md-width">
+        <buttons>
+          <component ns="axelrad-common" name="Button" id="user_create_btn" class="btn-success" caption="Create the user">
+          </component>  
+          <component ns="axelrad-common" name="Button" id="user_create_cancel_btn" class="btn-secondary" caption="Never mind">
+          </component>
+        </buttons>
+        <modalbody>
+          <div>
+            <div style="padding-bottom: 5px;">
+              <h4>
+                Creating a new user
+              </h4>
+            </div>
+            <div style="alert alert-danger" id="new_user_error" style="display: none;"></div>
+            <component ns="axelrad-common" id="new_user_form" name="Form" form-is-wizard="false">
+              <pages>
+                <div id="new_user_info" class="form-page" data-form-id="new_user_form">
+                  <div class="form-group">
+                    <label class="full-width" for="user_form_email">Email (this is also the user name)</label>
+                    <input autocomplete="off" prop-name="email" type="text" name="email" id="user_form_email" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label class="full-width" for="user_form_first_name">First name</label>
+                    <input autocomplete="off" maxlength="50" prop-name="firstName" type="text" name="first_name" id="user_form_first_name" class="form-control">  
+                  </div>
+                  <div class="form-group">
+                    <label class="full-width" for="user_form_last_name">Last name</label>
+                    <input autocomplete="off" maxlength="50" prop-name="lastName" type="text" name="last_name" id="user_form_last_name" class="form-control">  
+                  </div>
+                </div>
+              </pages>
+            </component>
+          </div>
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class UserCreateDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._user_name_touched = false;
+      }
+      
+      get form() { return this.user_create_modal.new_user_form; }
+      
+      onInit(me)
+      {
+        me.user_create_modal.onCancelClicked(
+          function()
+          {
+            me.user_create_modal.hide();
+          }
+        );
+        
+        me.select("#user_form_email").on('change', 
+          function()
+          {
+            me.fire('email-changed');
+          }
+        );
+        
+        me.select("#user_form_first_name, #user_form_last_name, #user_form_email").on('keyup', 
+          function()
+          {
+            me.fire('changed');
+          }
+        );
+        
+        me.user_create_modal.user_create_btn.onClick(
+          function()
+          {
+            me.fire('submit');
+          }
+        );
+        
+        
+        me.fire('changed');
+      }
+      
+      setError(msg)
+      {
+        if (msg)
+          this.select("#new_user_error").show();
+        else 
+          this.select("#new_user_error").hide();
+        
+        this.select("#new_user_error").html(msg);
+      }
+      
+      setGroups(groups)
+      {
+        this.form.user_groups_list.setItems(groups);
+      }
+      
+      set emailErrorMessage(msg) { this.select("#user_form_email_error").html(msg); }
+                                  
+      onEmailChanged(handler) { this.bind('email-changed', handler); }
+      
+      onKeyUp(handler) { this.bind('changed', handler); }
+      
+      onSubmit(handler) { this.bind('submit', handler); }
+      
+      set allowSubmit(value)
+      {
+        this.user_create_modal.user_create_btn.enabled = value;
+      }
+      
+      showModal()
+      {
+        this.user_create_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.user_create_modal.hide();
+      }
+      
+    }
+  </script>
+</view>

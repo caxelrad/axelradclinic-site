@@ -1,0 +1,81 @@
+<component>
+  <attrs>
+    <attr name="caption" value="" />
+    <attr name="icon" value="" />
+  </attrs>
+  <content>
+    <button class="btn">
+      {caption}
+    </button>
+  </content>  
+  <script>
+  class Button extends MercuryComponent
+  {
+    constructor(id)
+    {
+      super(id); //the original state gets passed in and stored in the component
+    }
+
+    onInit(me)
+    {
+      var t = this;
+      this.element().on('click', 
+        function(e)
+        {
+          alert(me.id+'.click');
+          t.fire('click', e);
+        }
+      );
+
+      this.setIcon(this.icon);
+    }
+
+    setIcon(icon)
+    {
+
+      var icon_html = '<i class="fa '+icon+'" aria-hidden="true"></i> ';
+      if (icon == '')
+      {
+        icon_html = '';
+      }
+      
+      if (this.caption != '')
+        this.element().html(icon_html+this.caption);
+      else
+        this.element().html(icon_html);
+    }
+    
+    get icon() { return this.element().attr('icon'); }
+    
+    set icon(val) 
+    { 
+      if (val != this.icon)
+      {
+        this.element().attr('icon', val); 
+        this.setIcon(val);
+      }
+    }
+    
+    get caption() { return this.element().html(); }
+    set caption (value) { this.element().html(value); }
+
+    get bgColor() { return this.element().css('background-color'); }
+    set bgColor(value) { this.element().css('background-color', value); }
+    
+    get enabled() { return this.element().prop('disabled'); }
+    set enabled(value)
+    {
+      this.log('enabled = '+value);
+      if (value)
+        this.element().removeAttr('disabled');
+      else
+        this.element().attr('disabled', 'disabled');
+    }
+    
+    onClick(handler)
+    {
+      this.bind('click', handler);
+    }
+  }
+  </script>
+</component>

@@ -1,0 +1,109 @@
+<view>
+  <content>
+    <h4>
+      I found some similar names. Is it one of these people?
+    </h4>
+    <p>
+      If one of them is the person you're booking, click the name to select that person. Otherwise, 
+      <a id="enter_manual_pt" href="javascript:void(0);">
+        click here to enter the information yourself
+      </a>.
+    </p>
+    <div class="form-row">
+      <table id="found_pts_table" class="table list-view-table">
+        <thead>
+          <tr>
+            <th scope="col" class="list-view-header">Name</th>
+            <th scope="col" class="list-view-header">Phone</th>
+            <th scope="col" class="list-view-header">Email</th>
+          </tr>
+        </thead>
+        <component ns="axelrad-common" name="TableBody" id="found_pts_list" key-prop="id" 
+                   item-class="list-view-row"
+                   multiselect="false" 
+                   selected-row-class="list-view-row-selected">
+          <templates>
+            <template>
+              <tr data-key="{id}" class="list-view-row">
+                <td class="list-view-cell">
+                  <div class="list-column-value list-item-title">
+                    {first_name} {last_name}
+                  </div>
+                </td>
+                <td>
+                  <div class="list-column-value list-item-subtitle">{phone}</div>
+                </td>
+                <td>
+                  <div class="list-column-value">
+                    {email}
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </templates>
+        </component>
+      </table>
+    </div>
+    <div class="form-page-footer">
+      <div style="display: inline-block;" class="pull-left">
+        <button class="btn btn-secondary form-cancel-btn">Never Mind</button> 
+      </div>
+      <button class="btn btn-info" id="pt_list_go_back">Go Back</button>
+      <button class="btn btn-success" id="pt_not_in_list_btn">Create a new patient record</button>
+    </div>
+  </content>
+  <script>
+    class NewApptSelectPt extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      get selectedItem() { return this.found_pts_list.selectedItem; }
+      
+      onSelectionChanged(handler) { this.bind('selection-changed', handler); }
+      
+      onInit(me)
+      {
+        me.found_pts_list.onSelectionChanged(
+           function()
+           {
+             me.fire('selection-changed');
+           }
+        );
+        
+        me.select("#enter_manual_pt, #pt_not_in_list_btn").click(
+          function(event)
+          {
+            me.fire('manual-entry');
+            event.stopPropagation();
+          }
+        );
+        
+        me.select("#pt_list_go_back").click(
+          function(event)
+          {
+            me.fire('go-back');
+            event.stopPropagation();
+          }
+        );
+      }
+      
+      setItems(items)
+      {
+        this.found_pts_list.setItems(items);
+      }
+      
+      onNotFound(handler)
+      {
+        this.bind('manual-entry', handler);
+      }
+      
+      onBack(handler)
+      {
+        this.bind('go-back', handler);
+      }
+    }
+  </script>
+</view>

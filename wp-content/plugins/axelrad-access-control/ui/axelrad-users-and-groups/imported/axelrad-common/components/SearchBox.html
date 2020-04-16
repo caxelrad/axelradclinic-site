@@ -1,0 +1,65 @@
+<component>
+  <attrs>
+    <attr name="placeholder" value="Search..." />
+  </attrs>
+  <content>
+    <div class="search-input">
+      <input id="{id}_input" type="text" prop-name="searchValue" class="form-control search-input inline" placeholder="{placeholder}">
+      <span id="{id}_icon" style="visibility: hidden;"><i style="color: gray;" class="fa fa-times-circle" aria-hidden="true"></i></span>
+    </div>
+  </content>
+  <script>
+    class SearchBox extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+
+      
+      onInit(me)
+      {
+        this.select('#'+this.id+'_input').on('keypress', 
+          function(event)
+          {
+            if (event.keyCode === 13) 
+              me.fire('submit');
+          }
+        );
+        
+        this.select('#'+this.id+'_input').on('keyup', 
+          function(event)
+          {
+            me.clearBtnVisible(me.searchValue != '');
+            me.fire('value-changed');
+          }
+        );
+        
+        this.select("#"+this.id+"_icon").click(
+          function()
+          {
+            me.searchValue = '';
+            me.fire('cleared');
+            me.clearBtnVisible(false);
+          }
+        );
+      }
+            
+      onSubmit(handler) { this.bind('submit', handler); }
+      onClear(handler) { this.bind('cleared', handler); }
+      
+      onValueChanged(handler)
+      {
+        this.bind('value-changed', handler);
+      }
+      
+      clearBtnVisible(visible)
+      {
+        if (visible)
+          this.select("#"+this.id+"_icon").css('visibility', 'visible');
+        else 
+          this.select("#"+this.id+"_icon").css('visibility', 'hidden');
+      }
+    }
+  </script>
+</component>

@@ -1,0 +1,73 @@
+<view>
+  <content>
+    <table id="users_tbl" class="table list-view-table">
+      <thead>
+        <tr>
+          <th scope="col" class="list-view-header" style="width: 20px;">
+            <input type="checkbox" id="users-check-all" style="margin-left: auto; margin-right: auto;" />
+          </th>
+          <th scope="col" class="list-view-header">Name</th>
+          <th scope="col" class="list-view-header">Email</th>
+        </tr>
+      </thead>
+      <component ns="axelrad-common" name="TableBody" id="users_list_ctrl" key-prop="id" 
+                 item-class="list-view-row"
+                 multi-select-input-class="users-row-check" 
+                 select-all-input-id="users-check-all"
+                 selected-row-class="list-view-row-selected">
+        <templates>
+          <template>
+            <tr data-key="%id%" class="list-view-row">
+              <td class="list-view-cell">
+                <div class="list-column-value">
+                  <input type="checkbox" class="users-row-check" data-key="%id%" style="margin-left: auto; margin-right: auto;" />
+                </div>
+              </td>
+              <td>
+                <div class="list-column-value list-item-title">%first_name% %last_name%</div>
+              </td>
+              <td class="list-view-cell">
+                <div class="list-column-value list-item-subtitle">
+                  %email%
+                </div>
+              </td>
+            </tr>
+          </template>
+        </templates>
+      </component>
+    </table>
+  </content>
+  <script>
+    class UsersMainList extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      get selectedKeys() { return this.users_list_ctrl.selectedKeys; }
+      
+      selectRow(value)
+      {
+        this.users_list_ctrl.selectRow(value);
+      }
+      
+      onSelectionChanged(handler) { this.bind('selection-changed', handler); }
+      
+      onInit(me)
+      {
+        me.users_list_ctrl.onSelectionChanged(
+           function()
+           {
+             me.fire('selection-changed');
+           }
+        );
+      }
+      
+      setUsers(items)
+      {
+        this.users_list_ctrl.setItems(items);
+      }
+    }
+  </script>
+</view>

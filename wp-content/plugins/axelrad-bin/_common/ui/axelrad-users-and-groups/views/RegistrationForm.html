@@ -1,0 +1,184 @@
+<view>
+  <attrs>
+    <attr name="disclaimer-text" value="We will NEVER share your information. EVER." />
+    <attr name="show-first-name" value="true" />
+    <attr name="require-first-name" value="true" />
+    <attr name="show-last-name" value="false" />
+    <attr name="require-last-name" value="false" />
+    <attr name="show-phone" value="false"/>
+    <attr name="require-phone" value="false"/>
+    <attr name="success-url" value=""/>
+    <attr name="cancel-caption" value=""/>
+    <attr name="cancel-url" value=""/>
+    <attr name="show-cancel-link" value=""/>
+    <attr name="btn-caption" value="Register Now"/>
+    <attr name="btn-class" value="btn-primary"/>
+    <attr name="email-placeholder" value="" />
+    <attr name="first-name-placeholder" value="" />
+    <attr name="last-name-placeholder" value="" />
+    <attr name="phone-placeholder" value="" />
+    <attr name="email-placeholder" value="" />
+    <attr name="add-to-group-name" value="" />
+  </attrs>
+  <content>
+    <div style="padding: 15px;">
+        <component ns="axelrad-common" id="{id}_form" name="Form" form-is-wizard="false">
+            <pages>
+              <div id="{id}_register_info">
+                <div class="form-group" id="{id}_first_name_group" style="display:none;">
+                  <input autocomplete="off" maxlength="50" prop-name="firstName" placeholder="{first-name-placeholder}"
+                         type="text" name="first_name" id="{id}_first_name" class="form-control">  
+                </div>
+                <div class="form-group" id="{id}_last_name_group" style="display:none;">
+                  <input autocomplete="off" maxlength="50" prop-name="lastName" placeholder="{last-name-placeholder}"
+                         type="text" name="last_name" id="{id}_last_name" class="form-control">  
+                </div>
+                <div class="form-group" id="{id}_email_group">
+                  <input autocomplete="off" prop-name="email" placeholder="{email-placeholder}"
+                         type="text" name="email" id="{id}_email" 
+                         class="form-control">
+                  <div id="{id}_email_error" style="font-size: 0.8rem; color: red;">
+                    
+                  </div>
+                </div>
+                <div class="form-group" id="{id}_phone_group" style="display:none;">
+                  <input autocomplete="off" prop-name="phone" placeholder="{phone-placeholder}"
+                         type="text" name="phone" id="{id}_phone" 
+                         class="form-control">
+                </div>
+                <div class="form-group" style="text-align:center;">
+                  <button id="{id}_btn" class="btn {btn-class} btn-block">
+                    {btn-caption}
+                  </button>
+                  <a href="{cancel-url}" id="{id}_cancel_link">{cancel-caption}</a>
+                  <p>
+                    {disclaimer-text}
+                  </p>
+                </div>
+              </div>
+          </pages>
+        </component>
+        <div id="{id}_loading" style="text-align: center; display: none;">
+          <div class="ax-progress"></div>
+          <h3 style="text-align:center;">Awesomeness is happening!</h3>
+        </div>
+      </div>
+  </content>
+  <script>
+  class RegistrationForm extends MercuryView
+  {
+    constructor(id)
+    {
+      super(id);
+      this.origBtnCaption = '';
+    }
+    
+    
+    onInit(me)
+    {
+      this.select("#"+this.form.id+"_btn").click( function() { me.fire('submit'); } );
+      this.firstNameVisible = this.attr('show-first-name') == 'true';
+      this.lastNameVisible = this.attr('show-last-name') == 'true';
+      this.phoneVisible = this.attr('show-phone') == 'true';
+      
+      this.origBtnCaption = this.btnCaption;
+      
+      this.form.onChange(
+        function(e)
+        {
+          me.form.markValidState(e.target, true);
+        }
+      );
+      
+      this.form.onKeyUp(
+        function(e)
+        {
+          me.form.markValidState(e.target, true);
+        }
+      );
+      
+      this.form.onClick(
+        function(e)
+        {
+          me.form.markValidState(e.target, true);
+        }
+      );
+    }
+    
+
+    get addToGroupName() { return this.attr('add-to-group-name'); }
+    set addToGroupName(val) { this.attr('add-to-group-name', val); }
+    
+    get form() { return this[this.id+"_form"]; }
+    
+    onSubmit(handler) { this.bind('submit', handler); }
+    
+    set emailErrorMessage(val) { this.select("#"+this.id+"_email_error").html(val); }
+    
+    showLoading()
+    {
+      this.form.show(false);
+      jQuery("#"+this.id+"_loading").show();
+    }
+    
+    hideLoading()
+    {
+      jQuery("#"+this.id+"_loading").hide();
+      this.form.show(true);
+    }
+    
+    get firstNameRequired() { return this.attr('require-first-name') == 'true'; }
+    set firstNameRequired(val) { this.attr('require-first-name', val ? 'true' : 'false'); }    
+    
+    get lastNameRequired() { return this.attr('require-last-name') == 'true'; }
+    set lastNameRequired(val) { this.attr('require-last-name', val ? 'true' : 'false'); }    
+    
+    get phoneRequired() { return this.attr('require-phone') == 'true'; }
+    set phoneRequired(val) { this.attr('require-phone', val ? 'true' : 'false'); }    
+    
+    get cancelLinkVisible() { return this.attr('show-cancel-link') == 'true'; }
+    set cancelLinkVisible(val)
+    {
+      this.attr('show-cancel-link', val ? 'true' : 'false');
+      
+      if (val)
+        jQuery("#"+this.form.id+"_cancel_link").show();
+      else 
+        jQuery("#"+this.form.id+"_cancel_link").hide();
+    }
+    
+    get firstNameVisible() { return this.attr('show-first-name') == 'true'; }
+    set firstNameVisible(val)
+    {
+      this.attr('show-first-name', val ? 'true' : 'false');
+      
+      if (val)
+        jQuery("#"+this.form.id+"_first_name_group").show();
+      else 
+        jQuery("#"+this.form.id+"_first_name_group").hide();
+    }
+    
+    get lastNameVisible() { return this.attr('show-last-name') == 'true'; }
+    set lastNameVisible(val)
+    {
+      this.attr('show-last-name', val ? 'true' : 'false');
+      
+      if (val)
+        jQuery("#"+this.form.id+"_last_name_group").show();
+      else 
+        jQuery("#"+this.form.id+"_last_name_group").hide();
+    }
+    
+    get phoneVisible() { return this.attr('show-phone') == 'true'; }
+    set phoneVisible(val)
+    {
+      this.attr('show-phone', val ? 'true' : 'false');
+      
+      if (val)
+        jQuery("#"+this.form.id+"_phone_group").show();
+      else 
+        jQuery("#"+this.form.id+"_phone_group").hide();
+    }
+  }
+  </script>
+</view>

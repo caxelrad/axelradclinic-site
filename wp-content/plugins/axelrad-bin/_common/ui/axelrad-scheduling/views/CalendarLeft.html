@@ -1,0 +1,54 @@
+<view>
+  <content>
+    <component ns="axelrad-common" name="DateSelector" id="my_date" class="date-selector-inline centered" inline="true"></component>
+    <div style="padding-top: 10px; text-align: center;">
+      <component ns="axelrad-common" name="DropDownButton" id="new_appt_btn" caption="New Appointment" menu-class="dropdown-menu-wide"
+                 item-class="new-appt-item" icon="fas fa-plus-circle" btn-class="btn-success" style="display: inline-block"
+                 auto-refresh-caption="false">
+          <templates>
+            <template>
+              <div class="dropdown-item dropdown-item-med new-appt-item" id="new-type-btn-{id}" data-key="{id}"><span style="background-color: {color};">&nbsp;&nbsp;</span>
+                {name} ({duration_minutes} minutes)</div>
+            </template>
+          </templates>
+      </component>
+    </div>
+  </content>
+  <script>
+  class CalendarLeft extends MercuryView
+  {
+    constructor(id)
+    {
+      super(id);
+    }
+    
+    get date() { return this.my_date.date; }
+    set date(value) { this.my_date.date = value; }
+    
+    onInit(me)
+    {
+      this.my_date.onDateChanged(
+        function(obj, event)
+        {
+          me.fire('date-changed');
+        }
+      );
+      
+      this.new_appt_btn.onSelectionChanged(
+        function()
+        {
+          me.fire('new-appt-click');
+        }
+      );
+    }
+    
+    get selectedApptTypeId() { return this.new_appt_btn.selectedKey; }
+    
+    onNewApptClick(handler) { this.bind('new-appt-click', handler); }
+    
+    onDateChanged(handler) { this.bind('date-changed', handler); }
+    
+    setApptTypes(items) { this.new_appt_btn.setItems(items); }
+  }
+  </script>
+</view>

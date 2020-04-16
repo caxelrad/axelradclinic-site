@@ -1,0 +1,63 @@
+<view>
+  <attrs>
+    <attr name="source-appt" value="appt" />
+  </attrs>
+  <content>
+    <div style="display:inline-block;" source-appt="{source-appt}">
+      <span id="{id}_color">&nbsp;&nbsp;</span>
+      <span id="{id}_type_name"></span>
+      on <span style="font-weight: 600;" id="{id}_display_date"></span>
+      in <span style="font-weight: 600;" id="{id}_location_name"></span>          
+      <span id="{id}_status" class="badge badge-light badge-size-med"></span>  
+    </div>
+  </content>
+  <script>
+    class ApptInfoView extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+      }
+      
+      clear()
+      {
+        this.apptTypeName = '';
+        this.locationName = '';
+        this.displayDate = '';
+        this.apptStatusText = '';
+      }
+      
+      get sourceApptName() { return this.element().attr('source-appt'); }
+    
+      get apptTypeName() { return this.select("#"+this.id+"_type_name").html(); }
+      set apptTypeName(value) { this.select("#"+this.id+"_type_name").html(value); }
+      
+      get locationName() { return this.select("#"+this.id+"_location_name").html(); }
+      set locationName(val) { this.select("#"+this.id+"_location_name").html(val); }
+      
+      get displayDate() { return this.select("#"+this.id+"_display_date").html(); }
+      set displayDate(val) { this.select("#"+this.id+"_display_date").html(val); }
+
+      get apptTypeColor() { return this.select("#"+this.id+"_color").css('background-color'); }
+      set apptTypeColor(value) { this.select("#"+this.id+"_color").css('background-color', value); }
+      
+      get apptStatusColor() { return this.select("#"+this.id+"_status").css('background-color'); }
+      set apptStatusColor(value) { this.select("#"+this.id+"_status").css('background-color', value); }
+      
+      get apptStatusTextColor() { return this.select("#"+this.id+"_status").css('color'); }
+      set apptStatusTextColor(value) { this.select("#"+this.id+"_status").css('color', value); }
+      
+      get apptStatusText() { return this.select("#"+this.id+"_status").html(); }
+      set apptStatusText(value) { this.select("#"+this.id+"_status").html(value); }
+      
+      get statusVisible() { return this.select("#"+this.id+"_status").css('display') != 'none'; }
+      set statusVisible(value) { this.select("#"+this.id+"_status").css('display', value ? 'inline-block' : 'none'); }
+      
+    }
+    
+  </script>
+</view>

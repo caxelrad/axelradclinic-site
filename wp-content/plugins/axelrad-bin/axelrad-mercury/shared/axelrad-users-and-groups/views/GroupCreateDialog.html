@@ -1,0 +1,151 @@
+<view>
+  <content>
+    <div>
+      <component id="group_create_modal" ns="axelrad-common" name="ModalDialog" title="Creating a group"
+             cancel-btn-id="group_cancel_btn" ok-btn-id="group_create_btn"
+             modal-class="modal-md-width">
+        <buttons>
+          <component ns="axelrad-common" name="Button" id="group_create_btn" class="btn-success" caption="Create the group">
+          </component>  
+          <component ns="axelrad-common" name="Button" id="group_cancel_btn" class="btn-secondary" caption="Never mind">
+          </component>
+        </buttons>
+        <modalbody>
+          <div>
+            <div style="padding-bottom: 5px;">
+              <h4>
+                Creating a new group
+              </h4>
+            </div>
+            <component ns="axelrad-common" id="new_group_form" name="Form" form-is-wizard="false">
+              <pages>
+                <div id="new_group_info" class="form-page" data-form-id="new_group_form">
+                  <div class="form-group">
+                    <label class="full-width" for="group_form_display_name">Group Display Name (up to 50 characters)</label>
+                    <input autocomplete="off" maxlength="50" prop-name="groupDisplayName" type="text" name="display_name" id="group_form_display_name" class="form-control">  
+                  </div>
+                  <div class="form-group">
+                    <label class="full-width" for="group_form_desc">Group Description</label>
+                    <textarea class="form-control" id="group_form_desc" name="desc" rows="3" prop-name="groupDescription"></textarea>  
+                  </div>
+                  <div class="form-group" id="form_group_name">
+                    <label class="full-width" for="group_form_name">Group Name (typically there is no need to change this)</label>
+                    <input autocomplete="off" prop-name="groupName" type="text" name="name" id="group_form_name" class="form-control">
+                  </div>
+                </div>
+              </pages>
+            </component>
+          </div>
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class GroupCreateDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._group_name_touched = false;
+      }
+      
+      get form() { return this.group_create_modal.new_group_form; }
+      
+      onInit(me)
+      {
+        me.group_create_modal.onCancelClicked(
+          function()
+          {
+            me.group_create_modal.hide();
+          }
+        );
+        
+        //don't allow anything but numbers, letter, spaces for gorup display name
+        me.select("#group_form_display_name").on('keypress', 
+          function (event) 
+          {
+            var regex = new RegExp("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (key != ' ')
+            {
+              if (!regex.test(key)) 
+              {
+                event.preventDefault();
+                return false;
+              }
+            }
+            me.fire('changed');
+          }
+        );
+        
+        me.select("#group_form_desc").on('keyup', 
+          function()
+          {
+            me.fire('changed');
+          }
+        );
+        
+        me.select("#group_form_display_name").on('keyup', 
+          function()
+          {
+            if (!me._group_name_touched)
+            {
+              var val = me.form.groupDisplayName;
+              if (val)
+                me.form.groupName = val.split(' ').join('-').toLowerCase();
+            }
+          }
+        );
+        
+        me.select("#group_form_name").on('keyup', 
+          function()
+          {
+            me._group_name_touched = true;
+          }
+        );
+        
+        me.group_create_modal.group_create_btn.onClick(
+          function()
+          {
+            me.fire('submit');
+          }
+        );
+        
+        me.fire('changed');
+      }
+      
+      get form() { return this.group_create_modal.new_group_form; }
+      
+      changed(handler) { this.bind('changed', handler); }
+      
+      onSubmit(handler) { this.bind('submit', handler); }
+      
+      /*
+      these aer no longer needed - we ahve them mapped via the prop-name attribute above
+      get groupName() { return this.select("#group_form_name").val(); }
+      set groupName(val) { this.select("#group_form_name").val(val); }
+      
+      get groupDisplayName() { return this.select("#group_form_display_name").val(); }
+      set groupDisplayName(val) { this.select("#group_form_display_name").val(val); }
+      
+      get groupDescription() { return this.select("#group_form_desc").val(); }
+      set groupDescription(val) { this.select("#group_form_desc").val(val); }
+      */
+      
+      set allowSubmit(value)
+      {
+        this.group_create_modal.group_create_btn.enabled = value;
+      }
+      
+      showModal()
+      {
+        this.group_create_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.group_create_modal.hide();
+      }
+    }
+  </script>
+</view>

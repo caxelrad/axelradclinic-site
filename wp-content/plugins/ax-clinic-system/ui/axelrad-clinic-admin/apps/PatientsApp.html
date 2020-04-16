@@ -1,0 +1,25 @@
+<app>
+  <content>
+    <div>
+      <span id="my-message"></span>
+    </div>
+  </content>
+  <script type="text/javascript">
+  class SettingsApp extends MercuryApp
+  {
+    constructor(id)
+    {
+      super(id);
+    }
+    
+    
+    onInit(me)
+    {
+    }
+
+    get message() { return this.select("#my-message").html(); }
+    set message(val) { this.select("#my-message").html(val); }
+    
+  }
+  </script>
+</app>

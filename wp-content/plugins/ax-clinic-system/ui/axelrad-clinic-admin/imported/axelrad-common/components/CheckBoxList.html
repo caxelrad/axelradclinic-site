@@ -1,0 +1,130 @@
+<component>
+  <attrs>
+    <attr name="row-length" value="6"/>
+    <attr name="orientation" value="vertical"/>
+    <attr name="item-class" value=""/>
+    <attr name="key-prop" value=""/>
+    <attr name="caption-prop" value=""/>
+    <attr name="selected-item-class" value=""/>
+  </attrs>
+  <content>
+    <div class="btn-list {class}">
+    </div>
+  </content>
+  <script>
+    class CheckBoxList extends MercuryListComponent
+    {
+      constructor(id)
+      {
+        super(id);
+        this.rowCount = 0;
+        this.clickedBox = null;
+      }
+      
+      get containerElementId() { return this.id; }
+      
+      get captionProperty() { return this.element().attr('caption-prop'); }
+      
+      get orientation() 
+      { 
+        var val = this.element().attr('orientation');
+        if (val)
+          return val;
+        else
+          return 'horizontal';
+      }
+      
+      get rowLength() 
+      { 
+        var val = this.element().attr('row-length');
+        if (val)
+          return val;
+        else
+          return 4;
+      }
+
+      onInit(me)
+      {
+        if (this.itemTemplates['default'] == null)
+        {
+          this.itemTemplates['default'] = '<input type="checkbox" name="'+this.id+'" data-key="{'+this.keyProperty+'}">{'+this.captionProperty+'}'; 
+        }
+        super.onInit(me);
+      }
+      
+      setItemClickHandler(me)
+      {
+        me.select('#'+this.containerElementId).on('click', 'input',
+          function(event)
+          {
+            me.log('detected a click on '+jQuery(this).attr('id'));
+            me.clickedBox = jQuery(this);
+            me.fire('check');
+          }
+        );
+      }
+      
+      onCheck(handler)
+      {
+        this.bind('check', handler);
+      }
+      
+      //allows for inserting columns and stuff
+      getListOpenTag() 
+      { 
+        this.rowCount = 0; //reset the row tag
+        if (this.orientation == 'horizontal') return '';
+        return '<div class="container"><div class="row">'; 
+      }
+      
+      getListCloseTag() 
+      { 
+        if (this.orientation == 'horizontal') return '';
+        
+        var val = '';
+        if (this.rowLength == 0 || this.rowCount < this.rowLength)
+          val = '</div>';
+        
+        val+='</div></div>';
+        return val;
+      }
+
+      getRowOpenTag(itemIndex) 
+      { 
+        if (this.orientation == 'horizontal') return '';
+      
+        this.rowCount++;
+        if (this.rowLength == 0)
+        {
+          if (this.rowCount == 1)
+            return '<div class="col">';
+          else
+            return '';
+        }
+        else if (this.rowCount == 1 || this.rowCount > this.rowLength)
+        {
+          this.rowCount = 1;
+          return '<div class="col">';
+        }
+        else
+        {
+          return '';
+        }
+      }
+      
+      getRowCloseTag(itemIndex) 
+      { 
+        if (this.orientation == 'horizontal') return '';
+        
+        if (this.rowLength == 0)
+           return '';
+        
+        if (this.rowCount == this.rowLength)
+        {
+          return '</div>';
+        }
+        return ''; 
+      }
+    }
+  </script>
+</component>

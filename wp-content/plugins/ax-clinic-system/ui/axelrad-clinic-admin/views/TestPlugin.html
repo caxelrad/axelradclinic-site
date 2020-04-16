@@ -1,0 +1,28 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" name="IconButton" icon="fa-envelope" id="plugin_btn" class="btn-primary btn-sml"></component>
+    </div>
+  </content>
+  <script>
+    class TestPlugin extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        this.plugin_btn.onClick(
+          function()
+          {
+            alert('plugin_btn');
+          }
+        );
+        
+      }        
+
+    }
+  </script>
+</view>

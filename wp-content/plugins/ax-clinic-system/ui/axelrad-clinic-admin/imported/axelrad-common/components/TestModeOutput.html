@@ -1,0 +1,32 @@
+<component>
+  <content>
+    <div style="padding: 10px; border: solid 1px #cccccc; display: none;">
+      Test mode content will appear here...
+    </div>
+  </content>
+  <script>
+    class TestModeOutput extends MercuryComponent
+    {
+      constructor(id) { super(id); }
+      
+      onInit(me)
+      {
+        mercury.setTestModeOutput(this);
+        
+        mercury.onTestModeChanged(
+          function()
+          {
+            me.show(mercury.testmode);
+          }
+        );
+      }
+      
+      write(output)
+      {
+        var html = this.element().html();
+        this.element().html(html+'<br>'+output);
+      }
+
+    }
+  </script>
+</component>

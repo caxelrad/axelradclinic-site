@@ -1,0 +1,87 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="user_group_rmv_modal" name="ModalDialog" title="Removing a user from a group..."
+               ok-btn-id="user_rmv_ok_btn" cancel-btn-id="user_rmv_cancel_btn" 
+               modal-class="modal-md-width"
+               footer-class="ax-modal-block-footer">
+        <buttons>
+          <div>
+            <button id="user_rmv_ok_btn" class="btn btn-success btn-block">
+              Yes, remove the user
+            </button>  
+          </div>
+          <div>
+            <button id="user_rmv_cancel_btn" class="btn btn-secondary btn-block">
+              Never mind
+            </button>
+          </div>
+        </buttons>
+        <modalbody>
+          <div style="text-align:center;">
+            <div style="padding-bottom: 5px;">
+              <h4>
+                Are you sure you want to remove <span class="bold" id="rmv_user_name"></span>
+                from the group <span class="bold" id="rmv_group_name"></span>?
+              </h4>
+              Removing a user from a group can make it so the user can no longer access stuff they need access to.
+            </div>
+          </div>
+
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class UserRmvGroupDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this.origCaption = '';
+      }
+      
+      onInit(me)
+      {
+        this.user_group_rmv_modal.onOKClicked(
+          function() { me.fire('ok'); }
+        );
+        
+        this.user_group_rmv_modal.onCancelClicked(
+          function() { me.fire('cancel'); }
+        );
+        
+        this.origCaption = jQuery("#user_rmv_ok_btn").html();
+      }
+      
+      get groupDisplayName() { return this.select("#rmv_group_name").html(); }
+      set groupDisplayName(val) { this.select("#rmv_group_name").html(val); }
+      
+      get userName() { return this.select("#rmv_user_name").html(); }
+      set userName(val) { this.select("#rmv_user_name").html(val); }
+      
+      resetConfirm()
+      {
+        jQuery("#user_rmv_ok_btn").addClass('btn-success').removeClass('btn-danger').html(this.origCaption);
+      }
+      
+      confirmAgain()
+      {
+        jQuery("#user_rmv_ok_btn").addClass('btn-danger').removeClass('btn-success').html('Are you SURE?');
+      }
+      
+      onOK(handler) { this.bind('ok', handler); }
+      onCancel(handler) { this.bind('cancel', handler); }
+      
+      showModal()
+      {
+        this.user_group_rmv_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.user_group_rmv_modal.hide();
+      }
+    }
+  </script>
+</view>

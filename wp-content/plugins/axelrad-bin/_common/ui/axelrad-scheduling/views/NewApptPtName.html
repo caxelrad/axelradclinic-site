@@ -1,0 +1,82 @@
+<view>
+  <content>
+    <h4 class="form-page-title">
+      Enter the patient's name below...
+    </h4>
+    <p>
+      We'll make sure they're not already in the system first.
+    </p>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_nm_first">First Name</label>
+        <input autocomplete="off" type="text" name="first_nm" id="pt_nm_first" class="form-control">
+      </div>
+      <div class="form-group col-md-6">
+        <label class="full-width" for="pt_nm_last">Last Name</label>
+        <input autocomplete="off" prop-name="lastName" type="text" name="last_nm" id="pt_nm_last" class="form-control">
+      </div>
+    </div>
+    <div class="form-page-footer">
+      <button class="btn btn-secondary pull-left form-cancel-btn">
+        Never Mind
+      </button>
+      <button class="btn btn-info" id="pt_name_go_back">Go Back</button>
+      <button class="btn btn-info" id="pt_name_btn" disabled="disabled">
+        Next
+      </button>
+    </div>
+  </content>
+  <script>
+    class NewApptPtName extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        me.select("#pt_name_btn").click(
+          function()
+          {
+            me.fire('on-submit');
+          }
+        );
+        
+        me.select("#pt_nm_first").on('keyup', 
+          function()
+          {
+            me.fire('name-changed');
+          }
+        );
+        
+        me.select("#pt_nm_last").on('keyup', 
+          function()
+          {
+            me.fire('name-changed');
+          }
+        );
+      }
+      
+      get firstName() { return this.select("#pt_nm_first").val(); }
+      get lastName() { return this.select("#pt_nm_last").val(); }
+      
+      get submitEnabled() { return this.select("#pt_name_btn").prop('disabled') != ''; }
+      
+      set submitEnabled(value)
+      {
+        this.select("#pt_name_btn").prop('disabled', value ? '' : 'disabled');
+      }
+      
+      onNameChanged(handler)
+      {
+        this.bind('name-changed', handler);
+      }
+      
+      onSubmit(handler)
+      {
+        this.bind('on-submit', handler);
+      }
+    }
+  </script>
+</view>

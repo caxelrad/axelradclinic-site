@@ -1,0 +1,92 @@
+<view>
+  <content>
+    <div>
+      <div class="container-fluid" style="width:100% !important;">
+        <div class="row" id="MyApp">
+          <div class="col-8">
+            <h3 style="text-align: left;">
+              Managing Users in
+              <component ns="axelrad-common" id="group_btn" name="DropDownButton" caption="" 
+                  style="display: inline-block;" key-prop="name" 
+                   auto-refresh-caption="true" 
+                   caption-prop="display_name" item-class="dropdown-item" btn-class="btn-inline">
+                <templates>
+                  <template>
+                    <div class="dropdown-item" data-key="%name%">%display_name%</div>
+                  </template>
+                </templates>
+              </component>
+            </h3>
+            <div class="content-left toolbar">
+              <component ns="axelrad-common" id="user_search" name="SearchBox" class="pull-right"></component>
+              <button class="btn btn-success" id="new_user_btn">
+                New User
+              </button>
+            </div>
+            <view name="UsersMainList" id="users_list" />  
+          </div>
+          <div class="col-4">
+            <view name="UserDetails" id="user_details" title="" />  
+          </div>
+        </div>  
+      </div>
+      <view name="UserCreateDialog" id="new_user_dialog"></view>
+      <view name="UserEditDialog" id="edit_user_dialog"></view>
+      <view name="UserDeleteDialog" id="delete_user_dialog"></view>
+      <view name="UserRmvGroupDialog" id="user_rmv_group_dialog"></view>
+      <view name="UserAddGroupDialog" id="user_add_group_dialog"></view>
+      <component ns="axelrad-common" name="Loading" id="mercury_loading"></component>
+      <component ns="axelrad-common" name="TestModeOutput" id="tm_output"></component>
+    </div>
+  </content>
+  <script type="text/javascript">
+  class UserMgmtConsole extends MercuryView
+  {
+    constructor(id)
+    {
+      super(id);
+      this._groupName = '';
+    }
+    
+    
+    onInit(me)
+    {
+      this.select("#new_user_btn").click( function() { me.fire('new-click'); } );
+      //this.user_search.onSubmit( function() { me.fire('search'); } );
+      //this.user_search.onClear( function() { me.fire('search-clear'); } );
+    
+      this.group_btn.onSelectionChanged(
+        function() 
+        { 
+          me._groupName = me.group_btn.selectedKey;
+          me.fire('group-changed'); 
+        }
+      );
+    }
+    
+    onGroupChanged(handler) { this.bind('group-changed', handler); }
+    
+    get selectedGroupName() { return this._groupName; }
+    set selectedGroupName(name) 
+    { 
+      if (name == this._groupName) return;
+      
+      this.group_btn.selectRow(name); 
+    }
+    
+    setGroups(groups)
+    {
+      this.group_btn.setItems(groups);
+    }
+    
+    
+    get searchString() { return this.user_search.searchValue; }
+                        
+    onSearch(handler) { this.bind('search', handler); }
+    onSearchClear(handler) { this.bind('search-clear', handler); }
+    
+    onNewClick(handler) { this.bind('new-click', handler); }
+    
+  }
+  </script>
+</view>

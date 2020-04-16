@@ -1,0 +1,117 @@
+<component>
+  <attrs>
+    <attr name="form-is-wizard" value="false"/>
+    <attr name="autocomplete" value="off" />
+    <attr name="cancel-btn-class" value="form-cancel-btn" />
+  </attrs>
+  
+  <content>
+    <form>
+      {pages}
+    </form>
+  </content>
+  <script>
+    class Form extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        me.select("#"+this.id).submit(
+          function(event)
+          {
+            me.log('detected a click on '+jQuery(this).attr('id'));
+            event.preventDefault(); //buttons don't submit
+          }
+        );
+        
+        me.select("#"+this.id).on('click', 'button',
+          function(event)
+          {
+            me.log('detected a click on '+jQuery(this).attr('id'));
+            //event.stopPropagation(); //buttons don't submit
+          }
+        );
+        
+        me.select("#"+this.id).on('click', '.'+this.cancelBtnClass,
+          function(event)
+          {
+            console.log('cancel button clicked.');
+            me.fire('on-cancel');
+            event.stopPropagation();
+            
+          }
+        );
+        
+        me.element().on('keyup', 'input[type="text"], textarea', 
+          function(e)
+          {
+            me.fire('keyup', e);
+          }
+        );
+        
+        me.element().on('click', 'input[type="checkbox"], input[type="radio"]', 
+          function(e)
+          {
+            me.fire('click', e);
+          }
+        );
+        
+        me.element().on('change', 'input[type="text"], textarea, select', 
+          function(e)
+          {
+            me.fire('change', e);
+          }
+        );
+          
+        if (!this.isWizard)
+        {
+          this.select('div[data-form-id="'+this.id+'"]').show();
+        }
+      }
+      
+      onClick(handler) { this.bind('click', handler); }
+      onChange(handler) { this.bind('change', handler); }
+      onKeyUp(handler) { this.bind('keyup', handler); }
+      
+      get cancelBtnClass() { return this.element().attr('cancel-btn-class'); }
+    
+      get isWizard() 
+      { 
+        return this.element().attr('form-is-wizard') == 'true';
+      }
+      
+      showPage(id)
+      {
+        if (this.isWizard)
+        {
+          this.select('div[data-form-id="'+this.id+'"]').hide();
+        }
+        
+        this.select('#'+id).show();
+      }
+      
+      onCancel(handler) { this.bind('on-cancel', handler); }
+      
+      
+      markValidState(input, valid, message = '')
+      {
+        this.log('markValidState '+input+' ('+valid+')');
+        if (typeof input == 'string')
+          input = jQuery('#'+this.id+' [name="'+input+'"]');
+        else
+          input = jQuery(input);
+        
+        var inputId = jQuery(input).attr('id');
+        if (inputId)
+          u.setInputValid(inputId, valid, message);
+        
+        return valid;
+      }
+    
+    }
+  </script>
+</component>

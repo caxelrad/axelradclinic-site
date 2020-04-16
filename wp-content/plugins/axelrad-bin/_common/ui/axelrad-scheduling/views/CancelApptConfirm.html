@@ -1,0 +1,96 @@
+<view>
+  <content>
+    <component ns="axelrad-common" id="cancel_appt_modal" name="ModalDialog" title="Cancelling an appointment..."
+               ok-btn-id="cancel_appt_ok_btn" cancel-btn-id="cancel_appt_cancel_btn" 
+               modal-class="modal-md-width"
+               footer-class="ax-modal-block-footer">
+      <buttons>
+        <div>
+          <button id="cancel_appt_ok_btn" class="btn btn-success btn-block">
+            Yes, cancel it now
+          </button>  
+        </div>
+        <div>
+          <button id="cancel_appt_standby_btn" class="btn btn-success btn-more-success btn-block">
+            Yes, cancel it + notify standby
+          </button>  
+        </div>
+        <div>
+          <button id="cancel_appt_cancel_btn" class="btn btn-secondary btn-block">
+            Never mind
+          </button>
+        </div>
+      </buttons>
+      <modalbody>
+        <div style="text-align:center;">
+          <div style="padding-bottom: 5px;">
+            <h4>
+              Are you sure you want to cancel the following appointment for 
+              <span id="cancel_appt_name" style="font-weight: 600;"></span>?
+            </h4>
+          </div>
+          <view id="canceling_appt_info" name="ApptInfoView" source-appt="cancelingAppt"></view>
+        </div>
+          
+      </modalbody>
+    </component>
+  </content>
+  <script>
+    class CancelApptConfirm extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        me.cancel_appt_modal.onCancelClicked(
+          function()
+          {
+            me.cancel_appt_modal.hide();
+          }
+        );
+        
+        me.cancel_appt_modal.onOKClicked(
+          function()
+          {
+            me.fire('ok-click');
+          }
+        );
+        
+        me.cancel_appt_modal.onOtherBtnClicked(
+          function(id)
+          {
+            if (id == 'cancel_appt_standby_btn')
+            {
+              me.fire('ok-plus-standby-click');
+            }
+          }
+        );
+      }
+      
+      onOK(handler)
+      {
+        this.bind('ok-click', handler);
+      }
+      
+      onOKStandby(handler)
+      {
+        this.bind('ok-plus-standby-click', handler);
+      }
+      
+      showModal()
+      {
+        this.cancel_appt_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.cancel_appt_modal.hide();
+      }
+      
+      set apptName(value) { this.select("#cancel_appt_name").html(value); }
+    }
+  </script>
+</view>

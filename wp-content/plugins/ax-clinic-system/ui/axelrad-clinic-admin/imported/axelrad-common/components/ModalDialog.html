@@ -1,0 +1,127 @@
+<component>
+  <attrs>
+    <attr name="modal-class" value="" />
+    <attr name="footer-class" value=""/>
+    <attr name="ok-btn-id" value="" />
+    <attr name="cancel-btn-id" value="" />
+  </attrs>
+  <content>
+    <div class="modal fade" tabindex="-1" style="display: none;" role="dialog" 
+         aria-labelledby="{id}_title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered {modal-class}" role="document">
+        <div class="modal-content">
+          <div class="modal-header ax-modal-header">
+            <span class="modal-title ax-modal-title" id="{id}_title">
+              {title}
+            </span>
+            <button type="button" id="{id}_close_btn" class="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="{id}_body">
+            {modalbody}
+          </div>
+          <div class="modal-footer {footer-class}" id="{id}_footer">
+            {buttons}
+          </div>
+        </div>
+      </div>
+    </div>  
+  </content>
+  <script>
+    class ModalDialog extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+        this._visible = false;
+      }
+      
+      onInit(me)
+      {
+        jQuery("#"+this.id+"_footer").on('click', 'button', 
+          function(event)
+          {
+            if (this.id != me.okBtnId
+                && this.id != me.cancelBtnId
+                && this.id != me.closeBtnId)
+            {
+              me.fire('button-clicked', this.id);
+              event.stopPropagation();
+            }
+          
+          }
+        );
+        
+        if (this.cancelBtnId)
+        {
+          me.select("#"+this.cancelBtnId).click(
+            function(event)
+            {
+              me.fire('cancel-clicked', this);
+            }
+          );
+        }
+        
+        if (this.okBtnId)
+        {
+          me.select("#"+this.okBtnId).click(
+            function(event)
+            {
+              me.fire('ok-clicked', this);
+            }
+          );
+        }
+        
+        me.select("#"+this.closeBtnId).click(
+          function(event)
+          {
+            me.fire('cancel-clicked', this);
+          }
+        );
+      }
+      
+      onCancelClicked(handler)
+      {
+        this.bind('cancel-clicked', handler);
+      }
+      
+      onOKClicked(handler)
+      {
+        this.bind('ok-clicked', handler);
+      }
+      
+      onOtherBtnClicked(handler)
+      {
+        this.bind('button-clicked', handler);
+      }
+      
+      show()
+      {
+        this._visible = true;
+        this.element().modal('show');
+      }
+      
+      hide()
+      {
+        this._visible = false;
+        this.element().modal('hide');
+      }
+      
+      set title(value) { this.selectId(this.id+'_title').html(value); }
+      get title() { return this.selectId(this.id+'_title').html(); }
+      
+      get cancelBtnId() { return this.element().attr('cancel-btn-id'); }
+      get okBtnId() { return this.element().attr('ok-btn-id'); }
+      get closeBtnId() { return this.id+'_close_btn'; }
+      
+      get visible() { return this._visible; }
+      
+      showProgress()
+      {
+        //cover the body with a spinner
+        
+      }
+    }
+  </script>
+</component>

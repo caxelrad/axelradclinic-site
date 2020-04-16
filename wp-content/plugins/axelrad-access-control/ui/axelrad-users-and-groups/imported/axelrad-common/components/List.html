@@ -1,0 +1,30 @@
+<component>
+  <attrs>
+    <attr name="class" value="simple-list"/>
+    <attr name="multiselect" value="false" />
+    <attr name="item-class" value="" />
+    <attr name="selected-item-class" value="" />
+  </attrs>
+  <content>
+    <ul class="list">
+    </ul>
+  </content>
+  <script>
+    class List extends MercuryListComponent
+    {
+      constructor(id)
+      {
+        super(id);
+        this.clickedButton = null;
+      }
+      
+      get containerElementId() { return this.id; }
+      
+      onInit(me)
+      {
+        this.listElementTag = 'li';
+        super.onInit(me);
+      }
+    }
+  </script>
+</component>

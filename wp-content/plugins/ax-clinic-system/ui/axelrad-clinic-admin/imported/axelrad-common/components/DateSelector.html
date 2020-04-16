@@ -1,0 +1,53 @@
+<component>
+  <content>
+    <div></div> 
+  </content>
+  <script>
+    class DateSelector extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+
+      get date() { return this.element().datepicker('getDate'); /*return this._date;*/ }
+      
+      set date(value) 
+      {
+        //this._date = value;
+        this.element().datepicker('setDate', value);
+      }
+      
+      onInit(me)
+      {
+        console.log("DateSelector.onInit()");
+
+        var t = this;
+        
+        this.element().datepicker(
+          {
+            inline: true,
+            format: "MM/DD/YYYY",
+            defaultDate: new Date() //moment(new Date(), "YYYY/MM/DD")
+          }
+        ).on("changeDate",
+          function (e)
+          {
+            console.log("DateSelector.changeDate");
+            t.fire('date-changed', e);
+          }
+        );
+      }
+      
+      onDateChanged(handler)
+      {
+        this.bind('date-changed', handler);
+      }
+    }
+  </script>
+  <refs>
+    <ref src="bootstrap-datepicker.min.css"></ref>
+    <ref src="bootstrap-datepicker.min.js"></ref>
+    <ref src="moment.min.js"></ref>
+  </refs>
+</component>

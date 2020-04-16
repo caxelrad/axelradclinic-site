@@ -1,0 +1,119 @@
+<view>
+  <content>
+    <div>
+      <div id="no_group" class="detail-view" style="display:none;">
+        Select a group to see stuff about that group.
+      </div>
+      <div id="one_group" class="detail-view" style="display:none;">
+        <div class="content-left" style="font-size: 1.25rem; font-weight: 600;" id="grp_detail_title" prop-name="groupDisplayName"></div>
+        <div>(<span id="group_name" prop-name="groupName"></span>)</div>
+        <component ns="axelrad-common" name="IconButton" icon="fa-envelope" id="email_group_btn" class="btn-primary btn-sml"></component>
+        <component ns="axelrad-common" name="IconButton" icon="fa-pencil-square-o" id="edit_group_btn" class="btn-primary btn-sml"></component>
+        <component ns="axelrad-common" name="IconButton" icon="fa-trash" id="delete_group_btn" class="btn-danger btn-sml"></component>
+        
+        <div style="padding-top: 10px;">
+          <b>Members:</b> <span class="bold" id="member_count"></span>
+          <div>
+            <b>Description:</b>
+          </div>
+          <div style="padding-left: 10px;" id="group_description" prop-name="description"></div>
+        </div>
+        <!-- 
+        <div style="padding: 10px; border: solid 1px #dedede;" style="display:none;">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="send_welcome_email">
+            <label class="form-check-label" for="send_welcome_email">Send a welcome email when someone is added to this group</label>
+          </div>
+          <div class="form-row" id="welcome_email_details" style="display:none;">
+            <div class="form-group col-md-8">
+              <label for="welcome_email_body">Email subject</label>
+              <input type="text" class="form-control" id="welcome_email_subj" name="email_subject" />
+              <label for="welcome_email_body">Email content</label>
+              <textarea class="form-control" id="welcome_email_body" name="email_body" rows="10"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+              First Name: <b>{first_name}</b><br>
+              Last Name: <b>{last_name}</b><br>
+              Email: <b>{email}</b><br>
+              Group: <b>{group}</b>
+            </div>
+          </div>
+        </div>
+      </div>
+      -->
+      <div id="multi_group" class="detail-view" style="display:none;">
+        You've got <span class="bold" id="group_count"></span> groups selected.
+      </div>
+    </div>
+  </content>
+  <script>
+    class GroupDetails extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        this.edit_group_btn.onClick(
+          function()
+          {
+            me.fire('edit');
+          }
+        );
+        
+        this.delete_group_btn.onClick(
+          function()
+          {
+            me.fire('delete');
+          }
+        );
+        
+//         this.select("#send_welcome_email").on('change', 
+//           function()
+//           {
+//             me.showEmailForm(me.sendWelcomeChecked);
+//           }
+//         );
+      }
+      
+//       get sendWelcomeChecked() { return this.select("#send_welcome_email").prop('checked'); }
+//       set sendWelcomeChecked(val) { this.select("#send_welcome_email").prop('checked', val); }
+      
+//       onWelcomeEmailCheck(handler) { this.bind('welcome-email', handler); }
+      
+//       showEmailForm(show)
+//       {
+//         if (show)
+//           this.select("#welcome_email_details").show();
+//         else 
+//           this.select("#welcome_email_details").hide();
+//       }
+      
+      onDeleteClick(handler) { this.bind('delete', handler); }
+      onEditClick(handler) { this.bind('edit', handler); }
+      
+//       get title() { return this.select("#grp_detail_title").html(); }
+//       set title(title) { this.select("#grp_detail_title").html(title); }
+      
+      set groupCount(count)
+      {
+        this.select('.detail-view').hide();
+        if (count == 0)
+          this.select("#no_group").show();
+        else if (count == 1)
+          this.select("#one_group").show();
+        else
+          this.select("#multi_group").show();
+          
+        this.select("#group_count").html(count);
+      }
+      
+      set memberCount(count)
+      {
+        this.select("#member_count").html(count);
+      }
+    }
+  </script>
+</view>

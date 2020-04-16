@@ -1,0 +1,25 @@
+<component>
+  <attrs>
+    <attr name="icon" value="" />
+    <attr name="caption" value="" />
+  </attrs>
+  <content>
+    <button class="btn btn-link"><i class="fas {icon}"></i> <span id="{id}_caption">{caption}</span></button>
+  </content>
+  <script>
+    class ToolBarButton extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        me.element().on('click', function(e) { me.fire('click', e); });
+      }
+      
+      get caption() { return this.selectId('{id}_caption').html(); }
+    }
+  </script>
+</component>

@@ -1,0 +1,83 @@
+<component>
+  <content>
+    <div>
+      <div class="padding-relaxed margin-tight">
+        <div class="times" id="{id}_times">
+          <component id="{id}_times_btns" name="ButtonList" key-prop="datetime" 
+                     multiselect="false" item-class="btn-success" class="centered no-width"
+                     selected-item-class="" orientation="vertical" row-length="0">
+            <templates>
+              <template name="default">
+                <button id="%component.id%_button_%rowIndex%" 
+                        class="btn btn-success btn-sml btn-appt-finder" style="width: 100%;  text-align: left;" data-key="%datetime%"
+                        data-is-taken="0">
+                    %display_info%
+                </button>
+              </template>
+              <template name="taken">
+                <button id="%component.id%_button_%rowIndex%" style="background-color: #fff; opacity: 0.8; color: #909090; width: 100%; text-align: left;" 
+                        class="btn btn-secondary btn-sml btn-appt-finder" data-key="%datetime%"
+                        data-is-taken="1">
+                  <span style="background-color: %type_color%">&nbsp;&nbsp;</span> %display_info%
+                </button>
+              </template>
+            </templates>
+          </component>
+        </div>
+      </div>
+    </div>
+  </content>
+  <script>
+    class SimpleApptFinder extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+        var today = new Date().midnight();
+        this._startDate = today.isSunday() ? today : today.sundayBefore();
+      }
+      
+      
+      
+      get btnList() { return this[this.id+'_times_btns']; }
+      
+      clear()
+      {
+        this.setTimes([]);
+      }
+      
+      get selectedTimes() 
+      {
+        return this.btnList.selectedRows;
+      }
+      
+      onInit(me)
+      {
+        var list = this.btnList;
+        list.onButtonClick(
+          function()
+          {
+            me.fire('time-selected');
+          }
+        );
+      }
+      
+      
+      onTimeSelected(handler)
+      {
+        this.bind('time-selected', handler);
+      }
+      
+      get selectedTime()
+      {
+        return this.btnList.findItem(this.btnList.clickedButton.attr('data-key'));
+      }
+      
+      //a list of actual datetime objects set to the correct date and time
+      setTimes(times)
+      {
+        this.btnList.setItems(times);
+      }
+    }
+  </script>
+</component>

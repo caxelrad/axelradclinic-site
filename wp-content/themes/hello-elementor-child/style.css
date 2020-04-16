@@ -1,0 +1,41 @@
+/*
+Theme Name: Axelrad Clinic Elementor Child Theme
+description: >-
+  A special theme just for Axelrad Clinic websites. :-)
+Author: Chris Axelrad
+Author URI: http://axelradclinic.com
+Template: hello-elementor
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: hello-elementor
+*/
+
+
+.btn-success
+{
+  background-color: #28A745 !important;
+  color: white !important;
+  border: solid 0px transparent !important;
+}
+
+.btn-block
+{
+  width: 100% !important;
+}
+
+.ax-form a { color: #2980B9 !important; }
+
+.form-control { margin-top: 3px; }
+
+.form-group { padding: 5px; }
+
+#login_btn { margin-left: auto; margin-right: auto; }
+
+input.form-control { min-width: 300px; }
+
+div.input-group { width: 100% !important; }
+
+.login-form { margin-left: auto !important; margin-right: auto  !important; width: 350px !important;}
+
+.container { padding-top: 5px !important; }

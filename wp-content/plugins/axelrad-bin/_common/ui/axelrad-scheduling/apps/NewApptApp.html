@@ -1,0 +1,170 @@
+<app model="NewApptModel">
+  <content>
+    <div id="content" class="site-content" style="padding-top: 75px;">
+      <div id="view_box" class="box kinda-wide centered">
+        <h3 class="section-title">
+          <span id="type_color">&nbsp;&nbsp;</span> New <span id="type_name"></span>
+          <span id="pt_name"></span>
+        </h3>
+        <div class="container">
+          <div class="row">
+            <div class="col-8">
+              <component ns="axelrad-common" id="new_appt_form" name="Form" form-is-wizard="true">
+                <pages>
+                  <div id="new_appt_booking_pg" class="form-page" data-form-id="new_appt_form">
+                    <view id="pt_appt_time_view" name="NewApptSelectTime"></view>
+                  </div>
+                  <div id="new_appt_pt_name_pg" class="form-page" data-form-id="new_appt_form">
+                    <view id="pt_name_view" name="NewApptPtName"></view>
+                  </div>
+                  <div id="new_appt_pt_select_pg" class="form-page" data-form-id="new_appt_form">
+                    <view id="pt_search_view" name="NewApptSelectPt"></view>
+                  </div>
+                  <div id="new_appt_pt_enter_info_pg" class="form-page" data-form-id="new_appt_form">
+                    <view id="pt_info_view" name="PatientInfoForm"></view>
+                  </div>
+                </pages>
+              </component>  
+            </div>
+            <div class="col-4">
+              <h4 class="section-title">Selected appointment times</h4>
+              <component ns="axelrad-common" id="appt_times" name="List" style="padding-left: 0px;" key-prop="datetime">
+                <templates>
+                  <template>
+                    <div class="box-sml" data-key="{datetime}">
+                      <button class="btn btn-danger btn-xs pull-right sel-time-cancel" data-key="{datetime}"> X </button>
+                      <strong>{pretty_date}</strong><br>
+                      <div style="padding-left: 5px;">
+                        <span class="badge" style="background-color: {type_color};color: {type_text_color};">{type_name}</span> 
+                        at {pretty_time} in {location_name}.
+                      </div>
+                    </div>
+                  </template>
+                </templates>
+              </component>
+            </div>
+          </div>      
+        </div>
+      </div>
+      <component ns="axelrad-common" id="appt_time_rmv_confirm" name="Confirm" title="Removing a time..."
+        yes-caption="Yep. Remove it." no-caption="Never mind." has-cancel="false">
+        <modalbody>
+          <div class="inline centered">
+            <div class="content-left">
+              <h4>Are you sure you want to remove this time?</h4>
+              <div>A <span id="type_color_rmv">&nbsp;&nbsp;</span> <strong><span id="type_name_rmv"></span></strong></div>
+              <div>on <strong><span id="appt_date_rmv"></span></strong></div>
+              <div>in <strong><span id="location_name_rmv"></span></strong>.</div>    
+            </div>
+          </div>
+        </modalbody>
+      </component>
+    </div>  
+  </content>
+  <script type="text/javascript">
+  class NewApptApp extends MercuryApp
+  {
+    constructor(id)
+    {
+      super(id);
+      this.removingTime = null;
+    }
+    
+    onInit(me)
+    {
+      me.new_appt_form.onCancel(
+        function()
+        {
+          me.fire('on-cancel');
+        }
+      );
+      
+      me.select('#appt_times').on('click', '.sel-time-cancel',
+          function(event)
+          {
+            alert(jQuery(this).attr('data-key'));
+            me.fire('cancel-time', jQuery(this).attr('data-key'));
+          }
+      );
+      
+      me.appt_time_rmv_confirm.onYes(
+        function()
+        {
+          me.fire('remove-time');
+          me.appt_time_rmv_confirm.hide();
+        }
+      );
+    }
+    
+    onRemoveConfirmed(handler) { this.bind('remove-time', handler); }
+    
+    confirmRemove(time)
+    {
+      this.removingTime = time;
+      this.appt_time_rmv_confirm.show();
+    }
+    
+    makeWide()
+    {
+      this.select("#view_box").removeClass('kinda-wide').addClass('wide');
+    }
+    
+    makeNormalWidth()
+    {
+      this.select("#view_box").removeClass('wide').addClass('kinda-wide');
+    }
+    
+    onRemoveTime(handler) { this.bind('cancel-time', handler); }
+    onCancel(handler) { this.bind('on-cancel', handler); }
+    
+    getPtName()
+    {
+      this.makeNormalWidth();
+      this.new_appt_form.showPage('new_appt_pt_name_pg');
+    }
+    
+    showPtMatches()
+    {
+      this.makeNormalWidth();
+      this.new_appt_form.showPage('new_appt_pt_select_pg');
+    }
+    
+    showPtInfo()
+    {
+      this.makeNormalWidth();
+      this.new_appt_form.showPage('new_appt_pt_enter_info_pg');
+    }
+    
+    showBooking() 
+    { 
+      this.makeWide();
+      this.new_appt_form.showPage('new_appt_booking_pg'); 
+    }
+    
+    
+    set typeColor(value)
+    {
+      this.select("#type_color, #type_color_rmv").css('background-color', value);
+    }
+    
+    
+    set typeName(value)
+    {
+      this.select("#type_name, #type_name_rmv").html(value);
+    }
+    
+    set displayTime(v)
+    {
+      this.select("#appt_date_rmv").html(v);
+    }
+      
+    set locationName(v) { this.select("#location_name_rmv").html(v); }
+      
+    
+    set patientName(value)
+    {
+      this.select("#pt_name").html(' for '+value);
+    }
+  }
+  </script>
+</app>

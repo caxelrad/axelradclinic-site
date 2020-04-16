@@ -1,0 +1,58 @@
+<view>
+  <content>
+    <div style="padding: 15px;">
+      <div class="container-fluid">
+        <div class="row" id="MyApp">
+          <div class="col-6">
+            <h3 style="text-align: left;">
+              Managing Groups
+            </h3>
+            <div class="content-left toolbar">
+              <button class="btn btn-success" id="new_group_btn">
+                New Group
+              </button>
+            </div>
+            <view name="GroupsMainList" id="groups_list" />  
+          </div>
+          <div class="col-6">
+            <view name="GroupDetails" id="group_details" title="" />  
+          </div>
+        </div>  
+      </div>
+      <view name="GroupCreateDialog" id="new_group_dialog"></view>
+      <view name="GroupEditDialog" id="edit_group_dialog"></view>
+      <view name="GroupDeleteDialog" id="delete_group_dialog"></view>
+    </div>
+  </content>
+  <script type="text/javascript">
+  class GroupsMgmtConsole extends MercuryApp
+  {
+    constructor(id)
+    {
+      super(id);
+    }
+    
+    
+    onInit(me)
+    {
+      this.select("#new_group_btn").click(
+        function()
+        {
+          me.fire('new-click');
+        }
+      );
+      
+    }
+    
+    onNewClick(handler) { this.bind('new-click', handler); }
+    
+    showNew(show)
+    {
+      if (show)
+        this.new_group_dialog.showModal();
+      else
+        this.new_group_dialog.hideModal();
+    }
+  }
+  </script>
+</view>

@@ -1,0 +1,36 @@
+<view>
+  <content>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Dashboard</a>
+        <a class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab" aria-controls="nav-notes" aria-selected="false">Chart Notes</a>
+        <a class="nav-item nav-link" id="nav-forms-tab" data-toggle="tab" href="#nav-forms" role="tab" aria-controls="nav-forms" aria-selected="false">Patient Forms</a>
+        <a class="nav-item nav-link" id="nav-plan-tab" data-toggle="tab" href="#nav-plan" role="tab" aria-controls="nav-plan" aria-selected="false">Treatment Plans</a>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        Here's all the overviews of stuff about this patient.
+      </div>
+      <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
+        Here's all the chart notes and stuff.
+      </div>
+      <div class="tab-pane fade" id="nav-forms" role="tabpanel" aria-labelledby="nav-forms-tab">
+        Here's all the intake forms and lab results.
+      </div>
+      <div class="tab-pane fade" id="nav-plan" role="tabpanel" aria-labelledby="nav-plan-tab">
+        Here's the treatment plan.
+      </div>
+    </div>
+  </content>
+  <script>
+    class ChartTabs extends MercuryView
+    {
+      constructor(id) { super(id); }
+      
+      onInit(me)
+      {
+      }
+    }
+  </script>
+</view>

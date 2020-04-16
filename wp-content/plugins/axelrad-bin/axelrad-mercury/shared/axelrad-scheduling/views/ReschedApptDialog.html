@@ -1,0 +1,59 @@
+<view>
+  <content>
+    <component ns="axelrad-common" id="resched_appt_modal" name="ModalDialog" title="Rescheduling an appointment..."
+             cancel-btn-id="rs_appt_cancel_btn" ok-btn-id=""
+             modal-class="modal-md-width">
+      <buttons>
+          <button id="rs_appt_cancel_btn" class="btn btn-secondary btn-block">
+            Never mind
+          </button>
+      </buttons>
+      <modalbody>
+        <div style="text-align:center;">
+          <div style="padding-bottom: 5px;">
+            <h4>
+              Rescheduling the following appointment for 
+              <span id="rs_appt_name" style="font-weight: 600;"></span>
+            </h4>
+          </div>
+          <view id="rs_appt_info" name="ApptInfoView" source-appt="reschedAppt"></view>
+          <div style="border: solid 1px #cccccc; padding: 15px; background-color: #cecece;">
+            <component ns="axelrad-common" id="rs_appt_finder" name="ApptFinder"></component>
+          </div>
+        </div>
+      </modalbody>
+    </component>
+  </content>
+  <script>
+    class ReschedApptDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+        me.resched_appt_modal.onCancelClicked(
+          function()
+          {
+            me.resched_appt_modal.hide();
+          }
+        );
+      }
+      
+      
+      showModal()
+      {
+        this.resched_appt_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.resched_appt_modal.hide();
+      }
+      
+      set apptName(value) { this.select("#rs_appt_name").html(value); }
+    }
+  </script>
+</view>

@@ -1,0 +1,38 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" name="IconButton" icon="fa-envelope" id="send_welcome_btn" class="btn-primary btn-sml"></component>
+      <component ns="axelrad-common" name="IconButton" icon="fa-pencil-square-o" id="edit_user_btn" class="btn-primary btn-sml"></component>
+      <component ns="axelrad-common" name="IconButton" icon="fa-trash" id="delete_user_btn" class="btn-danger btn-sml"></component>
+    </div>
+  </content>
+  <script>
+    class UserDetailsTasks extends MercuryView
+    {
+      constructor(id) { super(id); }
+      
+      onInit(me)
+      {
+        
+        
+        this.edit_user_btn.onClick(
+          function()
+          {
+            me.fire('edit');
+          }
+        );
+        
+        this.delete_user_btn.onClick(
+          function()
+          {
+            me.fire('delete');
+          }
+        );        
+      }
+      
+      onDeleteClick(handler) { this.bind('delete', handler); }
+      onEditClick(handler) { this.bind('edit', handler); }
+      onEmailClick(handler) { this.bind('email', handler); }
+    }
+  </script>
+</view>

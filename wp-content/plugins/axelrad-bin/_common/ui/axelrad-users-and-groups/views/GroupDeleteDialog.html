@@ -1,0 +1,81 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="group_delete_modal" name="ModalDialog" title="Deleting a group..."
+               ok-btn-id="group_del_ok_btn" cancel-btn-id="group_del_cancel_btn" 
+               modal-class="modal-md-width"
+               footer-class="ax-modal-block-footer">
+        <buttons>
+          <div>
+            <button id="group_del_ok_btn" class="btn btn-success btn-block">
+              Yes, delete it now
+            </button>  
+          </div>
+          <div>
+            <button id="group_del_cancel_btn" class="btn btn-secondary btn-block">
+              Never mind
+            </button>
+          </div>
+        </buttons>
+        <modalbody>
+          <div style="text-align:center;">
+            <div style="padding-bottom: 5px;">
+              <h4>
+                Are you sure you wan to delete <span class="bold" id="delete_group_name" prop-name="groupName"></span>?
+              </h4>
+              This is NOT reversible and can lead to bad consequences, so... do not do it unless you are 100% sure, ok?
+            </div>
+          </div>
+
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class GroupDeleteDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this.origCaption = '';
+      }
+      
+      onInit(me)
+      {
+        this.group_delete_modal.onOKClicked(
+          function() { me.fire('ok'); }
+        );
+        
+        this.group_delete_modal.onCancelClicked(
+          function() { me.fire('cancel'); }
+        );
+      }
+      
+      resetConfirm()
+      {
+        jQuery("#group_del_ok_btn").addClass('btn-success').removeClass('btn-danger').html(this.origCaption);
+      }
+      
+      confirmAgain()
+      {
+        if (this.origCaption == '')
+          this.origCaption = jQuery("#group_del_ok_btn").html();
+        
+        jQuery("#group_del_ok_btn").addClass('btn-danger').removeClass('btn-success').html('Are you SURE?');
+      }
+      
+      onOK(handler) { this.bind('ok', handler); }
+      onCancel(handler) { this.bind('cancel', handler); }
+      
+      showModal()
+      {
+        this.group_delete_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.group_delete_modal.hide();
+      }
+    }
+  </script>
+</view>

@@ -1,0 +1,32 @@
+<component>
+  <content>
+    <div id="mercury_loading" class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="width: 48px">
+                <span class="fa fa-spinner fa-spin fa-3x"></span>
+            </div>
+        </div>
+    </div>
+  </content>
+  <script>
+    class Loading extends MercuryComponent
+    {
+      constructor(id) { super(id); }
+      
+      onInit(me)
+      {
+        window.mercury_loading = me; //see MercuryUtils class in axelrad-mercury.js for where this is called into.
+      }
+      
+      show(message = '')
+      {
+        jQuery("#mercury_loading").modal('show');
+      }
+      
+      hide(message = '')
+      {
+        jQuery("#mercury_loading").modal('hide');
+      }
+    }
+  </script>
+</component>

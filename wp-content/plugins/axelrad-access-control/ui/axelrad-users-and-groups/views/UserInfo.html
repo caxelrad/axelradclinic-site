@@ -1,0 +1,96 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="user_info_form" name="Form" form-is-wizard="false">
+        <pages>
+          <div id="user_info" class="form-page" data-form-id="user_info_form">
+            <div class="form-group">
+              <label class="full-width" for="user_form_email">Email (this is also the user name)</label>
+              <input autocomplete="off" prop-name="email" type="text" name="email" id="user_form_email" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="full-width" for="user_form_first_name">First name</label>
+              <input autocomplete="off" maxlength="50" prop-name="firstName" type="text" name="first_name" id="user_form_first_name" class="form-control">  
+            </div>
+            <div class="form-group">
+              <label class="full-width" for="user_form_last_name">Last name</label>
+              <input autocomplete="off" maxlength="50" prop-name="lastName" type="text" name="last_name" id="user_form_last_name" class="form-control">  
+            </div>
+            <div>
+              <placholder id="user-form-extra-fields"></placholder>
+            </div>
+          </div>
+        </pages>
+      </component>
+    </div>
+  </content>
+  <script>
+    class UserInfo extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._user_name_touched = false;
+      }
+      
+      get form() { return this.user_info_form; }
+      
+      onInit(me)
+      {
+        
+        me.select("#user_form_email").on('change', 
+          function()
+          {
+            me.fire('email-changed');
+          }
+        );
+        
+        me.select("#user_form_first_name, #user_form_last_name, #user_form_email").on('keyup', 
+          function()
+          {
+            me.fire('changed');
+          }
+        );
+        
+        /*
+        me.user_create_modal.user_create_btn.onClick(
+          function()
+          {
+            me.fire('submit');
+          }
+        );
+        */
+        
+        me.fire('changed');
+      }
+      
+      setError(msg)
+      {
+        // if (msg)
+        //   this.select("#new_user_error").show();
+        // else 
+        //   this.select("#new_user_error").hide();
+        
+        // this.select("#new_user_error").html(msg);
+      }
+      
+      setGroups(groups)
+      {
+        //this.form.user_groups_list.setItems(groups);
+      }
+      
+      set emailErrorMessage(msg) { this.select("#user_form_email_error").html(msg); }
+                                  
+      onEmailChanged(handler) { this.bind('email-changed', handler); }
+      
+      onKeyUp(handler) { this.bind('changed', handler); }
+      
+      onSubmit(handler) { this.bind('submit', handler); }
+      
+      set allowSubmit(value)
+      {
+        //this.user_create_modal.user_create_btn.enabled = value;
+      }
+    }
+  </script>
+</view>

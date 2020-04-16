@@ -1,0 +1,103 @@
+<component>
+  <attrs>
+    <attr name="menu-class" value="dropdown-menu-wide"/>
+    <attr name="item-class" value="dropdown-menu-item"/>
+    <attr name="auto-refresh-caption" value="true"/>
+    <attr name="key-prop" value="id"/>
+    <attr name="caption-prop" value="name"/>
+    <attr name="multiselect" value=""/>
+    <attr name="btn-style" value=""/>
+    <attr name="btn-class" value=""/>
+  </attrs>
+  <content>
+    <div class="dropdown">
+      <button class="btn {btn-class} dropdown-toggle" style="{btn-style}" type="button" id="{id}Button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="{icon}"></i> <span id="{id}_caption">{caption}</span>
+      </button>
+      <div class="dropdown-menu {menu-class}" id="{id}Items" aria-labelledby="{id}Button">
+      </div>
+    </div>
+  </content>
+  <script>
+    class DropDownButton extends MercuryListComponent
+    {
+      constructor(id)
+      {
+        super(id);
+        
+      }
+      
+      get autoRefreshCaption()
+      {
+        return this.element().attr("auto-refresh-caption") == "true";
+      }
+      get containerElementId() { return this.id+"Items"; }
+      
+      get captionProperty() { return this.element().attr('caption-prop'); }
+      
+      get buttonBgColor() { return jQuery("#"+this.id+"Button").css('background-color'); }
+      
+      set buttonBgColor(value)
+      {
+        jQuery("#"+this.id+"Button").css('background-color', value);
+        if (tinycolor(value).isLight())
+          this.buttonTextColor = "#000"; 
+        else
+          this.buttonTextColor = "#fff";
+      }
+      
+      set buttonTextColor(value)
+      {
+        jQuery("#"+this.id+"Button").css('color', value);
+      }
+      
+      onInit(me)
+      {
+        super.onInit(me);
+        
+        me.select('#'+this.containerElementId).on('click', '.'+this.itemClass, 
+          function(event)
+          {
+            me.selectRow(jQuery(this).attr('data-key'));
+          }
+        );
+               
+        this.onItemsChanged(
+          function()
+          {
+            me.refreshCaption();
+          }
+        );
+        
+        this.onSelectionChanged(
+          function()
+          {
+            me.refreshCaption();
+          }
+        );
+
+      }
+      
+      setItems(items)
+      {
+        this.log('dropdown button set items called '+items.length);
+        super.setItems(items);
+      }
+      
+      refreshCaption()
+      {
+        if (!this.autoRefreshCaption) return;
+        
+        if (this.selectedKey && this.selectedItem)
+        {
+          this.caption = this.selectedItem[this.captionProperty];
+        }
+      }
+      
+      get caption() { return jQuery('#'+this.id+'_caption').html(); } 
+      set caption(value) { jQuery('#'+this.id+'_caption').html(value); } 
+      
+    }
+  </script>
+</component>

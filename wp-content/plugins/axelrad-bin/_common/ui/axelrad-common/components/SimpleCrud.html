@@ -1,0 +1,48 @@
+<component>
+  <attrs>
+    <attr name="key-prop" value="id" />
+    <attr name="multiselect" value="true" />
+    <attr name="multi-select-input-class" value="groups-row-check" />
+    <attr name="multi-select-input-class" value="groups-row-check" />
+  </attrs>
+  <content>
+    <div>
+      <table id="{id}_table" class="table list-view-table">
+        <thead>
+          <tr>
+            <th scope="col" class="list-view-header" style="width: 20px; display: none;">
+              <input type="checkbox" id="groups-check-all" style="margin-left: auto; margin-right: auto;" />
+            </th>
+            {headers}
+          </tr>
+        </thead>
+        <component name="TableBody" id="{id}_table_body" key-prop="{key-prop}" 
+                   item-class="list-view-row"
+                   multi-select-input-class="" 
+                   select-all-input-id="groups-check-all"
+                   selected-row-class="list-view-row-selected">
+          <templates>
+            {row_templates}
+          </templates>
+        </component>
+      </table>  
+      <component id="{id}_create_dialog" name="ModalDialog">
+        
+      </component>
+    </div>
+    
+  </content>
+  <script>
+    class SimpleCrud extends MercuryComponent
+    {
+      constructor(id)
+      {
+        super(id);
+      }
+      
+      onInit(me)
+      {
+      }
+    }
+  </script>
+</component>

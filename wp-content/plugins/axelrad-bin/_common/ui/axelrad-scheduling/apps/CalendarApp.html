@@ -1,0 +1,39 @@
+<app model="CalendarAppModel">
+  <content>
+    <div id="content" class="site-content">        
+      <view name="AppHeader" id="my_header" title="Dashboard"/>
+      <div class="container-fluid">
+        <div class="row" id="MyApp">
+          <div class="col-2">
+            <view name="CalendarLeft" id="cal_left" />
+          </div>
+          <div class="col-4">
+            <view name="CalendarMiddle" id="cal_middle" />  
+          </div>
+          <div class="col-6">
+            <view name="CalendarRight" id="cal_right" title="" />  
+          </div>
+        </div>  
+      </div>
+      <view name="CancelApptConfirm" id="cancel_appt_dialog"></view>
+      <view name="ReschedApptDialog" id="resched_appt_dialog"></view>
+    </div>
+  </content>
+  <script type="text/javascript">
+  class CalendarApp extends MercuryApp
+  {
+    constructor(id)
+    {
+      super(id);
+    }
+    
+    
+    onInit(me)
+    {
+      
+    }
+    
+    
+  }
+  </script>
+</app>

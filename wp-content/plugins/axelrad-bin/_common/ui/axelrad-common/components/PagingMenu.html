@@ -1,0 +1,25 @@
+<component>
+  <content>
+    <div class="paging-menu">
+      <div style="display: inline-block;">
+        Showing <span id="{id}_page_size" prop-name="pageSize"></span> per page. 
+      </div>
+      <div style="display: inline-block;">
+        <span id="{id}_page_num" prop-name="pageNum"></span> of <span id="{id}_page_count" prop-name="pageCount"></span> 
+      </div>
+      <div style="display: inline-block;" id="{id}_buttons">
+         
+      </div>
+    </div>
+  </content>
+  <script>
+    class PagingMenu extends MercuryComponent
+    {
+      constructor(id) { super(id); }
+      
+      onInit(me)
+      {
+      }
+    }
+  </script>
+</component>

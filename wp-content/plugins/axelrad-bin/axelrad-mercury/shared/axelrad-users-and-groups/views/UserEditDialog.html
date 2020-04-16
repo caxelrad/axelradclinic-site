@@ -1,0 +1,101 @@
+<view>
+  <content>
+    <div>
+      <component ns="axelrad-common" id="user_edit_modal" name="ModalDialog" title="Editing a user"
+               cancel-btn-id="user_edit_cancel_btn" ok-btn-id="user_edit_btn"
+               modal-class="modal-md-width">
+        <buttons>
+          <component ns="axelrad-common" name="Button" id="user_edit_btn" class="btn-success" caption="Save Changes">
+          </component>  
+          <component ns="axelrad-common" name="Button" id="user_edit_cancel_btn" class="btn-secondary" caption="Never mind">
+          </component>
+        </buttons>
+        <modalbody>
+          <div>
+            <div style="padding-bottom: 5px;">
+              <h4>Editing a user</h4>
+            </div>
+            <component ns="axelrad-common" id="edit_user_form" name="Form" form-is-wizard="false">
+              <pages>
+                <div id="edit_user_info" class="form-page" data-form-id="edit_user_form">
+                  <div class="form-group">
+                    <label class="full-width" for="user_edit_form_email">Email</label>
+                    <input autocomplete="off" prop-name="email" type="text" name="email" id="user_edit_form_email" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label class="full-width" for="user_edit_form_first_name">First name</label>
+                    <input autocomplete="off" maxlength="50" prop-name="firstName" type="text" name="first_name" id="user_edit_form_first_name" class="form-control">  
+                  </div>
+                  <div class="form-group">
+                    <label class="full-width" for="user_edit_form_last_name">Last name</label>
+                    <input autocomplete="off" maxlength="50" prop-name="lastName" type="text" name="last_name" id="user_edit_form_last_name" class="form-control">  
+                  </div>
+                </div>
+              </pages>
+            </component>
+          </div>
+        </modalbody>
+      </component>
+    </div>
+  </content>
+  <script>
+    class UserEditDialog extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        
+      }
+      
+      onInit(me)
+      {
+        me.user_edit_modal.onCancelClicked(
+          function()
+          {
+            me.fire('cancel');
+          }
+        );
+        
+        me.select("#user_edit_form_first_name, #user_edit_form_last_name, #user_edit_form_email").on('keyup', 
+          function()
+          {
+            me.fire('changed');
+          }
+        );
+        
+        
+        me.user_edit_modal.user_edit_btn.onClick(
+          function()
+          {
+            me.fire('submit');
+          }
+        );
+        
+        me.fire('changed');
+      }
+      
+      get form() { return this.user_edit_modal.edit_user_form; }
+      
+      changed(handler) { this.bind('changed', handler); }
+      
+      onCancel(handler) { this.bind('cancel', handler); }
+      onSubmit(handler) { this.bind('submit', handler); }
+      
+      
+      set allowSubmit(value)
+      {
+        this.user_edit_modal.user_edit_btn.enabled = value;
+      }
+      
+      showModal()
+      {
+        this.user_edit_modal.show();
+      }
+      
+      hideModal()
+      {
+        this.user_edit_modal.hide();
+      }
+    }
+  </script>
+</view>

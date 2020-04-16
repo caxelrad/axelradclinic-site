@@ -1,0 +1,129 @@
+<view>
+  <content>
+    <div>
+      <view id="appt_detail_contact_header" name="ContactHeader" style="margin-bottom: 10px;"></view>
+      <div>
+        <div class="section-title">
+          <div style="padding-bottom: 5px;">
+            <view id="appt_info_view" name="ApptInfoView" source-appt="appt"></view>
+          </div>
+          <div id="appt_tasks" style="padding-top: 5px; padding-bottom: 5px;">
+            <div style="display: inline-block;" id="appt_status_btn_box">
+              <b>Change status to: </b>
+              <component ns="axelrad-common" id="appt_status_btn" name="DropDownButton" caption="" style="display: inline-block;"  
+                  key-prop="name" caption-prop="display_name" auto-refresh-caption="true" 
+                  menu-class="dropdown-menu-tight" item-class="appt-status-btn" btn-class="btn-light btn-sml">
+                <templates>
+                  <template>
+                    <button class="btn btn-block appt-status-btn" id="type-btn-{name}" style="margin: 0px; background-color: {color}; color: {text_color};" data-key="{name}">{display_name}</button>
+                  </template>
+                </templates>
+              </component>   
+              | 
+            </div>
+            <component ns="axelrad-common" id="resched_btn" name="Button" caption="Reschedule" btn-class="btn-info btn-sml"></component>
+            <component ns="axelrad-common" id="cancel_btn" name="Button" caption="Cancel" btn-class="btn-danger btn-sml"></component>
+          </div>
+        </div>
+        <div class="section-content">
+          More info here...
+        </div>
+         
+      </div>
+    </div>
+  </content>
+  <script>
+    class ApptDetailView extends MercuryView
+    {
+      constructor(id)
+      {
+        super(id);
+        this._apptTypes = [];
+        this._apptTypeId = '';
+      }
+      
+      set title(value) { jQuery('#single_detail_title').html(value); }
+      get title() { this.selectId('single_detail_title').html(); }
+      
+      get apptStatusName() { return this.appt_status_btn.selectedKey; }
+      set apptStatusName(value) { this.appt_status_btn.selectRow(value); }
+      
+      get apptTypeId() { return this._apptTypeId; }
+      set apptTypeId(value) { this._apptTypeId = value; }
+      
+      get statusBtnVisible()
+      {
+        return this.select("#appt_status_btn").css('display') != 'none';
+      }
+      
+      set statusBtnVisible(value)
+      {
+        this.select("#appt_status_btn_box").css('display', value ? 'inline-block' : 'none');
+      }
+      
+      set apptStatusBtnColor(value)
+      {
+        this.appt_status_btn.buttonBgColor = value;  
+      }
+      
+      set apptStatusBtnTextColor(value)
+      {
+        this.appt_status_btn.buttonTextColor = value;  
+      }
+      
+      clear()
+      {
+      }
+      
+      setApptStatusValues(items)
+      {
+        this.appt_status_btn.setItems(items);
+      }
+      
+      setApptTypes(items)
+      {
+        //this.appt_status_btn.setItems(items);
+        this._apptTypes = items;
+      }
+      
+      onApptStatusChanged(handler)
+      {
+        this.bind('appt-status-changed', handler);
+      }
+      
+      onInit(me)
+      {
+        this.appt_status_btn.onSelectionChanged(
+          function()
+          {
+            me.fire('appt-status-changed');
+          }
+        );
+        
+        this.select("#cancel_btn").click(
+          function()
+          {
+            me.fire('cancel-clicked');
+          }
+        );
+        
+        this.select("#resched_btn").click(
+          function()
+          {
+            me.fire('resched-clicked');
+          }
+        );
+      }
+
+      onCancelApptClicked(handler)
+      {
+        this.bind('cancel-clicked', handler);
+      }
+      
+      onReschedApptClicked(handler)
+      {
+        this.bind('resched-clicked', handler);
+      }
+    }
+  </script>
+</view>
