@@ -18,19 +18,21 @@
  * @package WordPress
  */
 
-
+//OK here we go.
 //### Begin Axelrad Custom Config ###//
 define('APP_DIR', __DIR__);
 
+// ** ftp for dev is dev@axelradclinic.info / Ic(18o%1QrLf
+//
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', "ax_clinic");
+define('DB_NAME', "axelradc_dev");
 
 /** MySQL database username */
-define( 'DB_USER', 'chris358_clinic' );
+define( 'DB_USER', 'axelradc_dev' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '8p8S(34@7C' );
+define( 'DB_PASSWORD', '][P7=goy$2}d' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'localhost' );
@@ -83,6 +85,7 @@ $table_prefix = 'wp43_';
  */
 define( 'WP_DEBUG', false );
 define( 'WP_MEMORY_LIMIT', '128M' );
+define( 'WP_MAX_MEMORY_LIMIT', '256M' );
 define( 'WP_AUTO_UPDATE_CORE', false );
 
 /* That's all, stop editing! Happy publishing. */
